@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',  // путь от apps/backend
+      envFilePath: '../../.env', // путь от apps/backend
     }),
   ],
   controllers: [AppController],
