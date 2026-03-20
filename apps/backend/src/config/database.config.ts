@@ -5,6 +5,7 @@ import { EnvVariable } from '@/config/env.enum';
 export const databaseConfig: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
+    const isProd = config.get(EnvVariable.NODE_ENV) === 'production';
     return {
       type: 'postgres',
       host: config.get(EnvVariable.POSTGRES_HOST),
@@ -12,9 +13,16 @@ export const databaseConfig: TypeOrmModuleAsyncOptions = {
       username: config.get(EnvVariable.POSTGRES_USER),
       password: config.get(EnvVariable.POSTGRES_PASSWORD),
       database: config.get(EnvVariable.POSTGRES_DB),
-      synchronize: config.get(EnvVariable.NODE_ENV) === 'development',
       logging: config.get(EnvVariable.DB_LOGGING) === 'true',
       autoLoadEntities: true,
+      synchronize: false,
+      migrations: [
+        isProd
+          ? 'dist/database/migrations/*{.js}'
+          : 'src/database/migrations/*{.ts}',
+      ],
+      migrationsTableName: 'typeorm_migrations',
+      migrationsRun: false,
     }
   },
 };
