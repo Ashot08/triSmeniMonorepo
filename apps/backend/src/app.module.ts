@@ -8,7 +8,7 @@ import { RedisModule } from '@/redis/redis.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env', // путь от apps/backend
+      envFilePath: ['../../.env', '.env']
     }),
     TypeOrmModule.forRootAsync(databaseConfig),
     RedisModule,
