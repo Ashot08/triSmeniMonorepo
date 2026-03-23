@@ -7,7 +7,8 @@ import { join } from 'path';
 const envPath = join(process.cwd(), '../../.env');
 loadEnv({ path: envPath });
 
-const entitiesPath = join(__dirname, 'entities/*.entity.{ts,js}');
+//const entitiesPath = join(__dirname, 'entities/*.entity.{ts,js}');
+const entitiesPath = join(__dirname, '../modules/**/entities/*.entity.{ts,js}');
 const migrationsPath = join(__dirname, 'migrations/*.{ts,js}');
 
 const dataSourceOptions: DataSourceOptions = {
