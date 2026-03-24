@@ -20,7 +20,8 @@
     "test:e2e": "echo 'Warning: e2e test: skipped'",
     "typecheck": "tsc --noEmit",
     "typeorm": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json node --require ts-node/register ../../node_modules/typeorm/cli.js -d src/database/data-source.ts",
-    "migration:create": "npm run typeorm -- migration:create",
+    "typeorm:no-datasource": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json node --require ts-node/register ../../node_modules/typeorm/cli.js",
+    "migration:create": "npm run typeorm:no-datasource -- migration:create",
     "migration:generate": "npm run typeorm -- migration:generate",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert"

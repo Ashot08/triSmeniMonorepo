@@ -4,8 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index,
+  Index, ManyToMany, JoinTable,
 } from 'typeorm';
+import { Role } from '@/modules/role/entities/role.entity';
 
 export enum UserRole {
   PLAYER = 'player',
@@ -27,7 +28,7 @@ export enum AuthProvider {
 @Entity({ name: 'users' })
 @Index(['email'], { unique: true, where: '"email" IS NOT NULL' })
 @Index(['username'], { unique: true, where: '"username" IS NOT NULL' })
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -57,14 +58,6 @@ export class UserEntity {
   })
   authProviders!: AuthProvider[];
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    array: true,
-    default: [UserRole.PLAYER],
-  })
-  roles!: UserRole[];
-
   @Column({ type: 'boolean', default: false })
   isEmailVerified!: boolean;
 
@@ -79,33 +72,6 @@ export class UserEntity {
 
   @Column({ type: 'boolean', default: false })
   isMuted!: boolean;
-
-  @Column({ type: 'timestamp', nullable: true })
-  mutedUntil!: Date | null;
-
-  @Column({ type: 'int', default: 0 })
-  level!: number;
-
-  @Column({ type: 'int', default: 0 })
-  experience!: number;
-
-  @Column({ type: 'int', default: 0 })
-  rating!: number;
-
-  @Column({ type: 'int', default: 0 })
-  gamesPlayed!: number;
-
-  @Column({ type: 'float', default: 0 })
-  correctAnswersPercentage!: number;
-
-  @Column({ type: 'int', default: 0 })
-  totalWorkers!: number;
-
-  @Column({ type: 'int', default: 0 })
-  injuredWorkers!: number;
-
-  @Column({ type: 'text', array: true, default: [] })
-  badges!: string[];
 
   @Column({ type: 'boolean', default: true })
   notificationsEnabled!: boolean;
@@ -136,4 +102,12 @@ export class UserEntity {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   maxId!: string | null;
+
+  @ManyToMany(() => Role, (role) => role.users, { cascade: false })
+  @JoinTable({
+    name: 'users_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles!: Role[];
 }

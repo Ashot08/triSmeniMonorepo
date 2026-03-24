@@ -5,6 +5,7 @@ import { databaseConfig } from '@/config/database.config';
 import { RedisModule } from '@/redis/redis.module';
 import { UserModule } from './user/user.module';
 import { UserModule } from './modules/user/user.module';
+import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -16,6 +17,7 @@ import { UserModule } from './modules/user/user.module';
     TypeOrmModule.forRootAsync(databaseConfig),
     RedisModule,
     UserModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [],
