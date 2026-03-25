@@ -8,15 +8,6 @@ import {
 } from 'typeorm';
 import { Role } from '@/modules/role/entities/role.entity';
 
-export enum UserRole {
-  PLAYER = 'player',
-  SUBSCRIPTION_OWNER = 'subscription_owner',
-  ORGANIZATION_ADMIN = 'organization_admin',
-  PLATFORM_ADMIN = 'platform_admin',
-  MODERATOR = 'moderator',
-  CONTENT_MANAGER = 'content_manager',
-}
-
 export enum AuthProvider {
   EMAIL = 'email',
   VK = 'vk',
