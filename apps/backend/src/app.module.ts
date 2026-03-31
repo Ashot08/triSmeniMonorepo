@@ -5,6 +5,7 @@ import { databaseConfig } from '@/config/database.config';
 import { RedisModule } from '@/redis/redis.module';
 import { UserModule } from './user/user.module';
 import { UserModule } from './modules/user/user.module';
+import { RbacModule } from './modules/rbac/rbac.module';
 import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -18,6 +19,7 @@ import { UserModule } from './modules/user/user.module';
     RedisModule,
     UserModule,
     RoleModule,
+    RbacModule,
   ],
   controllers: [],
   providers: [],

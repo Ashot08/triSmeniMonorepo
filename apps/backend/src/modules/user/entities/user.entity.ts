@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   Index, ManyToMany, JoinTable,
 } from 'typeorm';
-import { Role } from '@/modules/role/entities/role.entity';
+import { Role } from '@/modules/rbac/role/entities/role.entity';
 
 export enum AuthProvider {
   EMAIL = 'email',
