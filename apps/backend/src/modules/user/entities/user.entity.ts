@@ -4,9 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index, ManyToMany, JoinTable,
+  Index, ManyToMany, JoinTable, OneToMany,
 } from 'typeorm';
 import { Role } from '@/modules/rbac/role/entities/role.entity';
+import { OrganizationMembership } from '@/modules/organization/entities/organization-membership.entity';
 
 export enum AuthProvider {
   EMAIL = 'email',
@@ -93,6 +94,9 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   maxId!: string | null;
+
+  @OneToMany(() => OrganizationMembership, (membership) => membership.department)
+  memberships!: OrganizationMembership[];
 
   @ManyToMany(() => Role, (role) => role.users, { cascade: false })
   @JoinTable({

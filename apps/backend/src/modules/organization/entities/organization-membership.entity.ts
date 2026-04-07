@@ -11,6 +11,7 @@ import {
 import { User } from '@/modules/user/entities/user.entity';
 import { Organization } from './organization.entity';
 import { Role } from '@/modules/rbac/role/entities/role.entity';
+import { OrganizationDepartment } from '@/modules/organization/entities/organization-department.entity';
 
 @Entity('organization_memberships')
 @Unique(['user', 'organization'])
@@ -18,7 +19,7 @@ export class OrganizationMembership {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @ManyToOne(() => User, (user) => user.organizationMemberships, {
+  @ManyToOne(() => User, (user) => user.memberships, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
@@ -30,7 +31,17 @@ export class OrganizationMembership {
   @JoinColumn({ name: 'organization_id' })
   organization!: Organization;
 
-  @ManyToOne(() => Role)
+  @ManyToOne(() => OrganizationDepartment, (dept) => dept.memberships, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'department_id' })
+  department!: OrganizationDepartment;
+
+  @ManyToOne(() => Role, {
+      nullable: false,
+      eager: true,
+  })
   @JoinColumn({ name: 'role_id' })
   role!: Role;
 
