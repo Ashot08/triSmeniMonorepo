@@ -6,6 +6,8 @@ import { RedisModule } from '@/redis/redis.module';
 import { UserModule } from './modules/user/user.module';
 import { RbacModule } from './modules/rbac/rbac.module';
 import { OrganizationModule } from './modules/organization/organization.module';
+import { GameModule } from './modules/game/game.module';
+import { TournamentModule } from './modules/tournament/tournament.module';
 
 
 @Module({
@@ -19,6 +21,8 @@ import { OrganizationModule } from './modules/organization/organization.module';
     UserModule,
     RbacModule,
     OrganizationModule,
+    GameModule,
+    TournamentModule,
   ],
   controllers: [],
   providers: [],

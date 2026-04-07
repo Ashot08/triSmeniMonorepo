@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { OrganizationMembership } from './organization-membership.entity';
 import { OrganizationDepartment } from './organization-department.entity';
-import { GameSession } from '@/modules/game/entities/game-session.entity';
+import { Game } from '@/modules/game/entities/game.entity';
 import { Tournament } from '@/modules/tournament/entities/tournament.entity';
 import { Question } from '@/modules/content/entities/question.entity';
 import { OrganizationPlan, OrganizationStatus, OrganizationType } from '@/common/enums/organization.enum';
@@ -84,17 +84,11 @@ export class Organization {
   @OneToMany(() => OrganizationMembership, (membership) => membership.organization)
   memberships!: OrganizationMembership[];
 
-  @OneToMany(() => OrganizationDepartment, (dept) => dept.organization, {
-    // todo: убрать эти свойства, делать CASCADE по аналогии с полем memberships
-    //  (в файле organization.membership.entity.ts есть связь с organization и там используется onDelete: 'CASCADE',
-    //  делать так)
-    cascade: true,
-    eager: false,
-  })
+  @OneToMany(() => OrganizationDepartment, (dept) => dept.organization)
   departments!: OrganizationDepartment[];
-  // todo: в связанной таблице сделать onDelete: 'SET NULL',
-  @OneToMany(() => GameSession, (session) => session.organization,)
-  gameSessions!: GameSession[];
+
+  @OneToMany(() => Game, (game) => game.organization,)
+  games!: Game[];
   // todo: в связанной таблице сделать onDelete: 'SET NULL'
   @OneToMany(() => Tournament, (tournament) => tournament.organization,)
   tournaments!: Tournament[];
