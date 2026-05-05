@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '@/modules/user/entities/user.entity';
 import { Organization } from './organization.entity';
-import { Role } from '@/modules/rbac/role/entities/role.entity';
+import { Role } from '@/modules/role/entities/role.entity';
 import { OrganizationDepartment } from '@/modules/organization/entities/organization-department.entity';
 
 @Entity('organization_memberships')

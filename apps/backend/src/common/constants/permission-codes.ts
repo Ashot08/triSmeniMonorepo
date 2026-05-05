@@ -9,4 +9,9 @@ export const PermissionCode = {
 
   ORG_MEMBERS_MANAGE: 'org.members.manage',
   ORG_THEME_UPDATE: 'org.theme.update',
+
+  GAMES_CREATE: 'games.create',
+  GAMES_UPDATE: 'games.update',
+  GAMES_DELETE: 'games.delete',
+  GAMES_READ: 'games.read',
 };

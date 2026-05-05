@@ -11,8 +11,8 @@ import { OrganizationMembership } from './organization-membership.entity';
 import { OrganizationDepartment } from './organization-department.entity';
 import { Game } from '@/modules/game/entities/game.entity';
 import { Tournament } from '@/modules/tournament/entities/tournament.entity';
-import { Question } from '@/modules/content/entities/question.entity';
 import { OrganizationPlan, OrganizationStatus, OrganizationType } from '@/common/enums/organization.enum';
+import { Question } from '@/modules/question/entities/question.entity';
 
 @Entity('organizations')
 @Index(['slug'], { unique: true })

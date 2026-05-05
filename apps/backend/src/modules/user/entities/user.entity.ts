@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   Index, ManyToMany, JoinTable, OneToMany,
 } from 'typeorm';
-import { Role } from '@/modules/rbac/role/entities/role.entity';
+import { Role } from '@/modules/role/entities/role.entity';
 import { OrganizationMembership } from '@/modules/organization/entities/organization-membership.entity';
 
 export enum AuthProvider {
@@ -98,9 +98,9 @@ export class User {
   @OneToMany(() => OrganizationMembership, (membership) => membership.department)
   memberships!: OrganizationMembership[];
 
-  @ManyToMany(() => Role, (role) => role.users, { cascade: false })
+  @ManyToMany(() => Role)
   @JoinTable({
-    name: 'users_roles',
+    name: 'user_roles',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })

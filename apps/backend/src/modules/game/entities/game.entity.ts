@@ -3,21 +3,17 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
   Index,
 } from 'typeorm';
 import { Organization } from '@/modules/organization/entities/organization.entity';
-import { User } from '@/modules/user/entities/user.entity';
-import { GameRound } from './game-round.entity';
-import { GameParticipant } from './game-participant.entity';
 import { GameStatus } from '../enums/game-status.enum';
 
 @Entity('game_sessions')
 @Index(['organization', 'status'])
-@Index(['createdBy'])
+// @Index(['createdBy'])
 @Index(['startedAt'])
 export class Game {
   @PrimaryGeneratedColumn('uuid')
@@ -29,7 +25,6 @@ export class Game {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  // ✅ Организация, создавшая игру (опционально, может быть NULL)
   @ManyToOne(() => Organization, (org) => org.games, {
     onDelete: 'SET NULL',
     nullable: true,
@@ -37,18 +32,6 @@ export class Game {
   @JoinColumn({ name: 'organization_id' })
   organization?: Organization;
 
-  // ✅ Кто создал игру (User ID)
-  @Column({ type: 'uuid', nullable: false })
-  createdBy!: string;
-
-  @ManyToOne(() => User, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  @JoinColumn({ name: 'created_by_id' })
-  creator?: User;
-
-  // ✅ Статус игры
   @Column({
     type: 'enum',
     enum: GameStatus,
@@ -56,7 +39,6 @@ export class Game {
   })
   status!: GameStatus;
 
-  // ✅ Параметры игры
   @Column({ type: 'integer', default: 2 })
   minPlayers!: number;
 
@@ -87,19 +69,19 @@ export class Game {
   scheduledStartAt?: Date; // Запланированное время начала
 
   // ✅ Участники
-  @OneToMany(() => GameParticipant, (participant) => participant.session, {
-    cascade: true,
-  })
-  participants!: GameParticipant[];
+  // @OneToMany(() => GameParticipant, (participant) => participant.session, {
+  //   cascade: true,
+  // })
+  // participants!: GameParticipant[];
 
   @Column({ type: 'integer', default: 0 })
   participantCount!: number; // Кэш количества участников
 
   // ✅ Раунды игры
-  @OneToMany(() => GameRound, (round) => round.session, {
-    cascade: true,
-  })
-  rounds_data!: GameRound[];
+  // @OneToMany(() => GameRound, (round) => round.session, {
+  //   cascade: true,
+  // })
+  // rounds_data!: GameRound[];
 
   // ✅ Настройки видимости
   @Column({
