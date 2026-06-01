@@ -8,6 +8,16 @@ import { Repository } from 'typeorm';
 export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
   async create(userDto: CreateUserDto) {
-    await this.userRepository.save(userDto);
+    // todo: сделать нормальный метод с хэширование пароля и проверками
+    return await this.userRepository.save(userDto);
+  }
+
+  async findOne(login: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: [
+        {username: login},
+        {email: login.toLowerCase()}
+      ]
+    });
   }
 }

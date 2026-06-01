@@ -9,7 +9,7 @@ import { GameModule } from './modules/game/game.module';
 import { TournamentModule } from './modules/tournament/tournament.module';
 import { QuestionModule } from './modules/question/question.module';
 import { RoleModule } from '@/modules/role/role.module';
-
+import { AuthModule } from '@/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +25,7 @@ import { RoleModule } from '@/modules/role/role.module';
     GameModule,
     TournamentModule,
     QuestionModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
