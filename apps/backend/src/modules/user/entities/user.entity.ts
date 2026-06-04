@@ -92,9 +92,6 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true })
   telegramId!: string | null;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  maxId!: string | null;
-
   @OneToMany(() => OrganizationMembership, (membership) => membership.department)
   memberships!: OrganizationMembership[];
 

@@ -10,6 +10,8 @@ import { TournamentModule } from './modules/tournament/tournament.module';
 import { QuestionModule } from './modules/question/question.module';
 import { RoleModule } from '@/modules/role/role.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -28,6 +30,11 @@ import { AuthModule } from '@/modules/auth/auth.module';
     AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
