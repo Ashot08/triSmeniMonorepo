@@ -9,6 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { StringValue } from 'ms';
 import { EnvVariable } from '@/config/env.enum';
 import { JwtStrategy } from '@/modules/auth/strategies/jwt.strategy';
+import { RedisService } from '@/redis/redis.service';
+import { JwtConfigService } from '@/config/jwt-config.service';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { JwtStrategy } from '@/modules/auth/strategies/jwt.strategy';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RedisService, JwtConfigService],
   controllers: [AuthController],
 })
 export class AuthModule {}
