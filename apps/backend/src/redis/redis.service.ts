@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '@/common/constants/injection-tokens';
+import { Session } from '@/modules/auth/interfaces/session.interface';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class RedisService {
@@ -29,12 +31,44 @@ export class RedisService {
     return this.redis.get(key);
   }
 
-  private getJwtRefreshKey(userId: string): string {
-    return `auth:refresh:${userId}`;
+  private getSessionKey(sessionId: string): string {
+    return `auth:session:${sessionId}`;
   }
 
-  async setJwtRefreshToken(userId: string, token: string, ttl: number) {
-    const key = this.getJwtRefreshKey(userId);
-    await this.set(key, token, ttl);
+  private getUserSessionsKey(userId: string): string {
+    return `auth:user:${userId}:sessions`;
   }
+
+  async createSession(
+    sessionId: string,
+    userId: string,
+    refreshHash: string,
+    ttlSeconds: number,
+  ): Promise<void> {
+    const sessionKey = this.getSessionKey(sessionId);
+    const userSessionsKey = this.getUserSessionsKey(userId);
+
+    const session: Session = {
+      userId,
+      refreshHash,
+      createdAt: new Date().toISOString(),
+    };
+
+    await this.redis
+      .multi()
+      .hset(
+        sessionKey,
+        session
+      )
+      .expire(sessionKey, ttlSeconds)
+      .sadd(userSessionsKey, sessionId)
+      .exec();
+  }
+
+  async getSession(...)
+
+  async updateSessionRefreshHash(...)
+
+  async deleteSession(...)
+
 }

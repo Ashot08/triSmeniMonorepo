@@ -11,6 +11,7 @@ import { EnvVariable } from '@/config/env.enum';
 import { JwtStrategy } from '@/modules/auth/strategies/jwt.strategy';
 import { RedisService } from '@/redis/redis.service';
 import { JwtConfigService } from '@/config/jwt-config.service';
+import { SessionService } from '@/modules/auth/session.service';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { JwtConfigService } from '@/config/jwt-config.service';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RedisService, JwtConfigService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RedisService, JwtConfigService, SessionService],
   controllers: [AuthController],
 })
 export class AuthModule {}

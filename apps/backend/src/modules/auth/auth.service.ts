@@ -3,15 +3,16 @@ import { UserService } from '@/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@/modules/user/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt.payload.interface';
-import { RedisService } from '@/redis/redis.service';
 import { JwtConfigService } from '@/config/jwt-config.service';
+import { SessionService } from '@/modules/auth/session.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private redis: RedisService,
+    private sessionService: SessionService,
     private jwtConfig: JwtConfigService,
   ) {}
 
@@ -42,15 +43,16 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload: JwtPayload = { login: user.username, sub: user.id };
+    const sessionId = randomUUID();
+    const payload: JwtPayload = { login: user.username, sub: user.id, sid: sessionId };
     const tokens = await this.generateTokens(payload);
 
-    await this.redis.setJwtRefreshToken(
+    await this.sessionService.createSession(
       user.id,
+      sessionId,
       tokens.refreshToken,
       this.jwtConfig.jwtRefreshTtlSeconds,
     );
-
     return tokens;
   }
 }
