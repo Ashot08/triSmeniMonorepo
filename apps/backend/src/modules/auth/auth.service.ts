@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '@/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@/modules/user/entities/user.entity';
@@ -6,6 +6,7 @@ import { JwtPayload } from './interfaces/jwt.payload.interface';
 import { JwtConfigService } from '@/config/jwt-config.service';
 import { SessionService } from '@/modules/auth/session.service';
 import { randomUUID } from 'crypto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +17,29 @@ export class AuthService {
     private jwtConfig: JwtConfigService,
   ) {}
 
-  async validateUser(login: string, pass: string): Promise<any> {
+  async validateUser(
+    login: string,
+    pass: string,
+  ): Promise<any> {
+
     const user = await this.userService.findOne(login);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+
+    if (!user) {
+      return null;
     }
-    return null;
+
+    const isValid = await bcrypt.compare(
+        pass,
+        user.password,
+    );
+
+    if (!isValid) {
+      return null;
+    }
+
+    const { password, ...result } = user;
+
+    return result;
   }
 
   private async generateTokens(payload: JwtPayload) {
@@ -54,5 +71,70 @@ export class AuthService {
       this.jwtConfig.jwtRefreshTtlSeconds,
     );
     return tokens;
+  }
+
+  async refresh(refreshToken: string) {
+    let payload: JwtPayload;
+
+    try {
+      payload = await this.jwtService.verifyAsync(
+        refreshToken,
+        {
+          secret: this.jwtConfig.jwtRefreshSecret,
+        },
+      );
+    } catch {
+      throw new UnauthorizedException(
+        'Invalid refresh token',
+      );
+    }
+
+    if (!payload.sid || !payload.sub) {
+      throw new UnauthorizedException(
+        'Invalid session',
+      );
+    }
+
+    const isValid = await this.sessionService.validateRefreshToken(
+      payload.sub,
+      payload.sid,
+      refreshToken
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException(
+        'Refresh token revoked',
+      );
+    }
+
+    const newTokens =
+      await this.generateTokens({
+        login: payload.login,
+        sub: payload.sub,
+        sid: payload.sid,
+      });
+
+    await this.sessionService.updateRefreshHash(
+      payload.sid,
+      newTokens.refreshToken,
+    );
+
+    return newTokens;
+  }
+
+  async logout(
+    userId: string,
+    sessionId: string,
+  ): Promise<void> {
+    await this.sessionService.deleteSession(
+      userId,
+      sessionId,
+    );
+  }
+
+  async logoutAll(userId: string): Promise<void> {
+    await this.sessionService.deleteAllUserSessions(
+      userId,
+    );
   }
 }

@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '@/common/constants/injection-tokens';
 import { Session } from '@/modules/auth/interfaces/session.interface';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class RedisService {
@@ -65,10 +64,74 @@ export class RedisService {
       .exec();
   }
 
-  async getSession(...)
+  async getSession(
+    sessionId: string,
+  ): Promise<Session | null> {
+    const key = this.getSessionKey(sessionId);
 
-  async updateSessionRefreshHash(...)
+    const session = await this.redis.hgetall(key);
 
-  async deleteSession(...)
+    if (!session.userId || !session.refreshHash) {
+      return null;
+    }
 
+    return {
+      userId: session.userId,
+      refreshHash: session.refreshHash,
+      createdAt: session.createdAt,
+    };
+  }
+
+  async updateSessionRefreshHash(
+    sessionId: string,
+    refreshHash: string,
+  ): Promise<void> {
+    const key = this.getSessionKey(sessionId);
+
+    await this.redis.hset(key, {
+      refreshHash,
+    });
+  }
+
+  async deleteSession(
+    userId: string,
+    sessionId: string,
+  ): Promise<void> {
+    const sessionKey = this.getSessionKey(sessionId);
+    const userSessionsKey = this.getUserSessionsKey(userId);
+
+    await this.redis
+      .multi()
+      .del(sessionKey)
+      .srem(userSessionsKey, sessionId)
+      .exec();
+  }
+
+  async getUserSessions(
+    userId: string,
+  ): Promise<string[]> {
+    return this.redis.smembers(
+      this.getUserSessionsKey(userId),
+    );
+  }
+
+  async deleteSessions(
+    userId: string,
+    sessionIds: string[],
+  ): Promise<void> {
+
+    const pipeline = this.redis.multi();
+
+    for (const sessionId of sessionIds) {
+      pipeline.del(
+        this.getSessionKey(sessionId),
+      );
+    }
+
+    pipeline.del(
+      this.getUserSessionsKey(userId),
+    );
+
+    await pipeline.exec();
+  }
 }

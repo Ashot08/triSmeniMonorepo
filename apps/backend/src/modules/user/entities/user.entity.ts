@@ -30,8 +30,8 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true, unique: true })
   email!: string | null;
 
-  @Column({ type: 'text', nullable: true })
-  password!: string | null;
+  @Column({ type: 'text'})
+  password!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   firstName!: string | null;
