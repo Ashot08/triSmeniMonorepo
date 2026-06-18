@@ -7,6 +7,7 @@ import { JwtConfigService } from '@/config/jwt-config.service';
 import { SessionService } from '@/modules/auth/session.service';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -71,6 +72,13 @@ export class AuthService {
       this.jwtConfig.jwtRefreshTtlSeconds,
     );
     return tokens;
+  }
+
+  async register(dto: CreateUserDto) {
+
+    const user = await this.userService.create(dto);
+
+    return await this.login(user);
   }
 
   async refresh(refreshToken: string) {

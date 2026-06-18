@@ -1,9 +1,10 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Get, Body } from '@nestjs/common';
 import {Request as AuthRequest} from 'express';
 import { LocalAuthGuard } from '@/modules/auth/guards/local-auth.guard';
 import { AuthService } from '@/modules/auth/auth.service';
 import { User } from '@/modules/user/entities/user.entity';
 import { Public } from '@/modules/auth/decorators/public.decorator';
+import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 interface RequestWithUser extends AuthRequest {
   user: User;
@@ -28,5 +29,11 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req: RequestWithUser) {
     return req.user;
+  }
+
+  @Public()
+  @Post('register')
+  async register (@Body() createUserDto: CreateUserDto) {
+    return await this.authService.register(createUserDto);
   }
 }
