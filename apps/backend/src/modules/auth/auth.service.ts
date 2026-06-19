@@ -8,6 +8,7 @@ import { SessionService } from '@/modules/auth/session.service';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
+import { AuthenticatedRequest } from '@/modules/auth/auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +61,7 @@ export class AuthService {
     };
   }
 
-  async login(user: User) {
+  async login(req: AuthenticatedRequest) {
     const sessionId = randomUUID();
     const payload: JwtPayload = { login: user.username, sub: user.id, sid: sessionId };
     const tokens = await this.generateTokens(payload);

@@ -21,8 +21,10 @@ export class UserService {
 
     const exists = await this.userRepository.findOne({
       where: [
-        {email},
-        {username},
+        {email: email},
+        {username: username},
+        {username: email},
+        {email: username},
       ],
     });
 
