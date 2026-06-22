@@ -1,17 +1,10 @@
-import { Controller, Request, Post, UseGuards, Get, Body, Req, Res } from '@nestjs/common';
-import {Request as AuthRequest} from 'express';
-import { LocalAuthGuard } from '@/modules/auth/guards/local-auth.guard';
-import { AuthService } from '@/modules/auth/auth.service';
-import { User } from '@/modules/user/entities/user.entity';
-import { Public } from '@/modules/auth/decorators/public.decorator';
+import { Controller, Post, UseGuards, Get, Body, Req} from '@nestjs/common';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { AuthService } from './auth.service';
+import { Public } from './decorators/public.decorator';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
-
-export interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    sessionId: string;
-  };
-}
+import type { JwtRequest } from './interfaces/jwt.request.interface';
+import type { LoginRequest } from './interfaces/login.request.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -20,20 +13,20 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: AuthenticatedRequest) {
+  login(@Req() req: LoginRequest) {
     // todo: записывать рефреш токен в http only cookies
-    return await this.authService.login(req.user);
+    return this.authService.login(req.user);
   }
 
   @Public()
   @Post('register')
-  async register (@Body() createUserDto: CreateUserDto) {
-    return await this.authService.register(createUserDto);
+  register (@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
   }
 
   @Public()
   @Post('refresh')
-  async refresh(
+  refresh(
     @Body() body: { refreshToken: string },
   ) {
     // todo: записывать рефреш токен в http only cookies
@@ -44,12 +37,13 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Request() req: RequestWithUser) {
-    return this.authService.logout(req.user.id, req.user.sessionId)
+  logout(@Req() req: JwtRequest) {
+    const {id, sessionId} = req.user;
+    return this.authService.logout(id, sessionId)
   }
 
   @Get('profile')
-  getProfile(@Request() req: RequestWithUser) {
+  getProfile(@Req() req: JwtRequest) {
     return req.user;
   }
 }

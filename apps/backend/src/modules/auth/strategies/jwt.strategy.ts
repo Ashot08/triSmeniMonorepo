@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '@/config/env.enum';
 import { UserService } from '@/modules/user/user.service';
 import { JwtPayload } from '../interfaces/jwt.payload.interface';
+import { JwtUser } from '../interfaces/jwt.user.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: JwtPayload): Promise<JwtUser> {
     const user = await this.userService.findOne(payload.login);
 
     if(!user) {

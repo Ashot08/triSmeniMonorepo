@@ -1,14 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '@/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@/modules/user/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt.payload.interface';
 import { JwtConfigService } from '@/config/jwt-config.service';
-import { SessionService } from '@/modules/auth/session.service';
+import { SessionService } from './session.service';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
-import { AuthenticatedRequest } from '@/modules/auth/auth.controller';
+import { LoginUser } from './interfaces/login.user.interface';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +21,7 @@ export class AuthService {
   async validateUser(
     login: string,
     pass: string,
-  ): Promise<any> {
+  ): Promise<LoginUser | null> {
 
     const user = await this.userService.findOne(login);
 
@@ -39,9 +38,11 @@ export class AuthService {
       return null;
     }
 
-    const { password, ...result } = user;
-
-    return result;
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
   }
 
   private async generateTokens(payload: JwtPayload) {
@@ -61,7 +62,7 @@ export class AuthService {
     };
   }
 
-  async login(req: AuthenticatedRequest) {
+  async login(user: LoginUser) {
     const sessionId = randomUUID();
     const payload: JwtPayload = { login: user.username, sub: user.id, sid: sessionId };
     const tokens = await this.generateTokens(payload);
