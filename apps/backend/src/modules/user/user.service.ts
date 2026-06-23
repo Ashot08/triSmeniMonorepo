@@ -58,4 +58,24 @@ export class UserService {
       ]
     });
   }
+
+  async findByEmail(email: string) {
+    return this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
+  async updatePassword(
+    userId: string,
+    password: string,
+  ) {
+    const hash = await bcrypt.hash(password, 10);
+
+    await this.userRepository.update(
+      userId,
+      {
+        password: hash,
+      },
+    );
+  }
 }

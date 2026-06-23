@@ -30,6 +30,12 @@ export class RedisService {
     return this.redis.get(key);
   }
 
+  async delete(
+    key: string,
+  ): Promise<void> {
+    await this.redis.del(key);
+  }
+
   private getSessionKey(sessionId: string): string {
     return `auth:session:${sessionId}`;
   }

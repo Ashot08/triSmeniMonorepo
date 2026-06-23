@@ -12,6 +12,7 @@ import { JwtStrategy } from '@/modules/auth/strategies/jwt.strategy';
 import { RedisService } from '@/redis/redis.service';
 import { JwtConfigService } from '@/config/jwt-config.service';
 import { SessionService } from '@/modules/auth/session.service';
+import { PasswordResetService } from '@/modules/auth/password.reset.service';
 
 @Module({
   imports: [
@@ -27,7 +28,14 @@ import { SessionService } from '@/modules/auth/session.service';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RedisService, JwtConfigService, SessionService],
+  providers: [AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    RedisService,
+    JwtConfigService,
+    SessionService,
+    PasswordResetService,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
