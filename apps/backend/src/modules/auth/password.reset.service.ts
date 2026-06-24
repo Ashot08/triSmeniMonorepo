@@ -118,6 +118,11 @@ export class PasswordResetService {
       userId,
     );
 
+
+    return {
+      success: true,
+      message: 'Password updated successfully',
+    };
   }
 
 }

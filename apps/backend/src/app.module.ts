@@ -12,6 +12,7 @@ import { RoleModule } from '@/modules/role/role.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
       isGlobal: true,
       envFilePath: ['../../.env', '.env']
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 5,
+      },
+    ]),
     TypeOrmModule.forRootAsync(databaseConfig),
     RedisModule,
     UserModule,
@@ -35,6 +42,10 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
   ],
 })
 export class AppModule {}

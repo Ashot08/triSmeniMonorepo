@@ -8,6 +8,7 @@ import type { LoginRequest } from './interfaces/login.request.interface';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { PasswordResetService } from './password.reset.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -72,6 +73,12 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({
+    default: {
+      limit: 10,
+      ttl: 60000,
+    },
+  })
   @Post('password-reset/confirm')
   resetPassword(
     @Body() dto: ResetPasswordDto,
