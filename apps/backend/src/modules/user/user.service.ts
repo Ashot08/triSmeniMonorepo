@@ -4,10 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/modules/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { RoleService } from '@/modules/role/role.service';
+import { RoleCode } from '@/common/enums/role.enum';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly roleService: RoleService,
+  ) {}
   async create(userDto: CreateUserDto) {
 
     const email = userDto.email.trim().toLowerCase();
@@ -35,6 +40,11 @@ export class UserService {
       );
     }
 
+    const role = await this.roleService.findByCode(RoleCode.PLAYER);
+
+    if(!role) {
+      throw new ConflictException(`Role ${RoleCode.PLAYER} does not exist`);
+    }
 
     const passwordHash = await bcrypt.hash(
         userDto.password,
@@ -44,6 +54,7 @@ export class UserService {
     const user = this.userRepository.create({
         ...userDto,
         password: passwordHash,
+        roles: [role],
       });
 
     return await this.userRepository.save(user);

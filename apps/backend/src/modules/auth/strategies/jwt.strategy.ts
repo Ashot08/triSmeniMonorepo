@@ -21,14 +21,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<JwtUser> {
-    const user = await this.userService.findOne(payload.login);
-
-    if(!user) {
-      throw new UnauthorizedException('User not found');
-    }
+    // todo: Сейчас доверяем JWT токену, в перспективе доработать на более надежный вариант.
+    // const user = await this.userService.findOne(payload.login);
+    //
+    // if(!user) {
+    //   throw new UnauthorizedException('User not found');
+    // }
 
     return {
-      id: user.id,
+      id: payload.sub,
       sessionId: payload.sid,
     }
   }
