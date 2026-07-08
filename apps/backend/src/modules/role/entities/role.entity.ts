@@ -1,4 +1,5 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { RoleCode } from '@/common/enums/role.enum';
 
 @Entity({ name: 'roles' })
 export class Role {
@@ -7,7 +8,7 @@ export class Role {
 
   @Index({ unique: true })
   @Column({ type: 'varchar', length: 64, nullable: false })
-  code!: string;
+  code!: RoleCode;
 
   @Column({ type: 'varchar', length: 128, nullable: false })
   name!: string;

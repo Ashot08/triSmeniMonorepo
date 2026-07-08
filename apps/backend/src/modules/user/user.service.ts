@@ -66,13 +66,15 @@ export class UserService {
       where: [
         {username: login},
         {email: login.toLowerCase()}
-      ]
+      ],
+      relations: ['roles'],
     });
   }
 
   async findByEmail(email: string) {
     return this.userRepository.findOne({
       where: { email },
+      relations: ['roles'],
     });
   }
 

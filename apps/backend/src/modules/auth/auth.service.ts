@@ -8,6 +8,7 @@ import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 import { LoginUser } from './interfaces/login.user.interface';
+import { User } from '@/modules/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -38,11 +39,7 @@ export class AuthService {
       return null;
     }
 
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
+    return this.toLoginUser(user)
   }
 
   private async generateTokens(payload: JwtPayload) {
@@ -64,7 +61,12 @@ export class AuthService {
 
   async login(user: LoginUser) {
     const sessionId = randomUUID();
-    const payload: JwtPayload = { login: user.username, sub: user.id, sid: sessionId };
+    const payload: JwtPayload = {
+      login: user.username,
+      sub: user.id,
+      sid: sessionId,
+      roles: user.roles,
+    };
     const tokens = await this.generateTokens(payload);
 
     await this.sessionService.createSession(
@@ -80,7 +82,7 @@ export class AuthService {
 
     const user = await this.userService.create(dto);
 
-    return await this.login(user);
+    return await this.login(this.toLoginUser(user));
   }
 
   async refresh(refreshToken: string) {
@@ -122,6 +124,7 @@ export class AuthService {
         login: payload.login,
         sub: payload.sub,
         sid: payload.sid,
+        roles: payload.roles,
       });
 
     await this.sessionService.updateRefreshHash(
@@ -148,4 +151,12 @@ export class AuthService {
     );
   }
 
+  private toLoginUser(user: User): LoginUser {
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      roles: user.roles.map(role => role.code),
+    };
+  }
 }
