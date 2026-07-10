@@ -6,12 +6,12 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
+  JoinColumn, ManyToMany, JoinTable,
 } from 'typeorm';
 import { User } from '@/modules/user/entities/user.entity';
 import { Organization } from './organization.entity';
-import { Role } from '@/modules/role/entities/role.entity';
 import { OrganizationDepartment } from '@/modules/organization/entities/organization-department.entity';
+import { OrganizationRole } from '@/modules/organization/entities/organization-role.entity';
 
 @Entity('organization_memberships')
 @Unique(['user', 'organization'])
@@ -38,12 +38,13 @@ export class OrganizationMembership {
   @JoinColumn({ name: 'department_id' })
   department!: OrganizationDepartment;
 
-  @ManyToOne(() => Role, {
-      nullable: false,
-      eager: true,
+  @ManyToMany(() => OrganizationRole)
+  @JoinTable({
+    name: 'organizations_roles',
+    joinColumn: { name: 'organization_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'organization_role_id', referencedColumnName: 'id' },
   })
-  @JoinColumn({ name: 'role_id' })
-  role!: Role;
+  organizationRoles!: OrganizationRole[];
 
   @Column({ type: 'boolean', default: false })
   isActive!: boolean;

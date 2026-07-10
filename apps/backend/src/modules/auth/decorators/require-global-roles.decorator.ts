@@ -3,7 +3,7 @@ import { RoleCode } from '@/common/enums/role.enum';
 import { GlobalRoles } from './roles.decorator';
 import { GlobalRolesGuard } from '../guards/roles.guard';
 
-export function AuthorizeGlobalRoles(
+export function RequireGlobalRoles(
   ...roles: RoleCode[]
 ) {
   return applyDecorators(

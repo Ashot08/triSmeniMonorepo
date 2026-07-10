@@ -5,7 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  Index,
+  Index, JoinColumn, ManyToOne,
 } from 'typeorm';
 import { OrganizationMembership } from './organization-membership.entity';
 import { OrganizationDepartment } from './organization-department.entity';
@@ -13,6 +13,7 @@ import { Game } from '@/modules/game/entities/game.entity';
 import { Tournament } from '@/modules/tournament/entities/tournament.entity';
 import { OrganizationPlan, OrganizationStatus, OrganizationType } from '@/common/enums/organization.enum';
 import { Question } from '@/modules/question/entities/question.entity';
+import { User } from '@/modules/user/entities/user.entity';
 
 @Entity('organizations')
 @Index(['slug'], { unique: true })
@@ -29,9 +30,6 @@ export class Organization {
 
   @Column({ type: 'text', nullable: true })
   description?: string;
-
-  @Column({ type: 'uuid', nullable: false })
-  ownerId!: string;
 
   @Column({ type: 'varchar', nullable: true })
   logoUrl?: string;
@@ -104,4 +102,11 @@ export class Organization {
 
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
+
+  @ManyToOne(() => User, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
+  @JoinColumn({ name: 'owner_id' })
+  owner!: User;
 }

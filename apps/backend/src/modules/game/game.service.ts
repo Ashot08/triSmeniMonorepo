@@ -1,11 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { Game } from './entities/game.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Organization } from '@/modules/organization/entities/organization.entity';
+import { User } from '@/modules/user/entities/user.entity';
+
+interface CreateGameOptions {
+  dto: CreateGameDto;
+  organizationId?: string;
+  createdBy: string;
+}
 
 @Injectable()
 export class GameService {
-  create(createGameDto: CreateGameDto) {
-    return 'This action adds a new game';
+  constructor(@InjectRepository(Game) private readonly gameRepository: Repository<Game>,) {
+  }
+
+  async create({
+                 dto,
+                 organizationId,
+                 createdBy,
+               }: CreateGameOptions): Promise<Game> {
+    const game = this.gameRepository.create({
+      ...dto,
+      organization: {id: organizationId} as Organization,
+      createdBy: {id: createdBy} as User,
+    });
+
+    return this.gameRepository.save(game);
   }
 
   findAll() {

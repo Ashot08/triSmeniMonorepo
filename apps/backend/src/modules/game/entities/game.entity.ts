@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Organization } from '@/modules/organization/entities/organization.entity';
 import { GameStatus } from '../enums/game-status.enum';
+import { User } from '@/modules/user/entities/user.entity';
 
 @Entity('game_sessions')
 @Index(['organization', 'status'])
@@ -24,13 +25,6 @@ export class Game {
 
   @Column({ type: 'text', nullable: true })
   description?: string;
-
-  @ManyToOne(() => Organization, (org) => org.games, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  @JoinColumn({ name: 'organization_id' })
-  organization?: Organization;
 
   @Column({
     type: 'enum',
@@ -132,4 +126,18 @@ export class Game {
 
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date; // Soft delete
+
+  @ManyToOne(() => User, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
+  @JoinColumn({ name: 'created_by' })
+  createdBy!: User;
+
+  @ManyToOne(() => Organization, (org) => org.games, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'organization_id' })
+  organization?: Organization;
 }

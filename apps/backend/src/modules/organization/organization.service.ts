@@ -12,15 +12,15 @@ export class OrganizationService {
     return `This action returns all organization`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} organization`;
   }
 
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
+  update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
     return `This action updates a #${id} organization`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} organization`;
   }
 }

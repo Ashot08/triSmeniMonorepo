@@ -9,7 +9,7 @@ import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { PasswordResetService } from './password.reset.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Throttle } from '@nestjs/throttler';
-import { AuthorizeGlobalRoles } from './decorators/authorize-global-roles.decorator';
+import { RequireGlobalRoles } from './decorators/require-global-roles.decorator';
 import { RoleCode } from '@/common/enums/role.enum';
 
 @Controller('auth')
@@ -57,7 +57,7 @@ export class AuthController {
     return this.authService.logoutAll(id)
   }
 
-  @AuthorizeGlobalRoles(RoleCode.PLAYER)
+  @RequireGlobalRoles(RoleCode.PLAYER)
   @Get('profile')
   getProfile(@Req() req: JwtRequest) {
     return req.user;
