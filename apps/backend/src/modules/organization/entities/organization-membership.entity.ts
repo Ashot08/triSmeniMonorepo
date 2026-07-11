@@ -40,9 +40,15 @@ export class OrganizationMembership {
 
   @ManyToMany(() => OrganizationRole)
   @JoinTable({
-    name: 'organizations_roles',
-    joinColumn: { name: 'organization_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'organization_role_id', referencedColumnName: 'id' },
+    name: 'organization_memberships_roles',
+    joinColumn: {
+      name: 'organization_membership_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'organization_role_id',
+      referencedColumnName: 'id',
+    },
   })
   organizationRoles!: OrganizationRole[];
 

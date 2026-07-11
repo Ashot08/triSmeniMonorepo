@@ -17,7 +17,7 @@ import { User } from '@/modules/user/entities/user.entity';
 
 @Entity('organizations')
 @Index(['slug'], { unique: true })
-@Index(['ownerId'])
+//@Index(['ownerId'])
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

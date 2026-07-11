@@ -7,6 +7,8 @@ import { OrganizationDepartment } from './entities/organization-department.entit
 import { OrganizationMembership } from './entities/organization-membership.entity';
 import { OrganizationRole } from '@/modules/organization/entities/organization-role.entity';
 import { GameModule } from '@/modules/game/game.module';
+import { OrganizationGameController } from './controllers/organization-game.controller';
+import { OrganizationMembershipService } from '@/modules/organization/organization-membership.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -15,7 +17,7 @@ import { GameModule } from '@/modules/game/game.module';
     OrganizationMembership,
     OrganizationRole
   ]), GameModule],
-  controllers: [OrganizationController],
-  providers: [OrganizationService],
+  controllers: [OrganizationController, OrganizationGameController],
+  providers: [OrganizationService, OrganizationMembershipService],
 })
 export class OrganizationModule {}

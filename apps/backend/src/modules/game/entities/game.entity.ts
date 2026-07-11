@@ -12,7 +12,7 @@ import { Organization } from '@/modules/organization/entities/organization.entit
 import { GameStatus } from '../enums/game-status.enum';
 import { User } from '@/modules/user/entities/user.entity';
 
-@Entity('game_sessions')
+@Entity('games')
 @Index(['organization', 'status'])
 // @Index(['createdBy'])
 @Index(['startedAt'])
@@ -34,25 +34,21 @@ export class Game {
   status!: GameStatus;
 
   @Column({ type: 'integer', default: 2 })
-  minPlayers!: number;
+  playersCount!: number;
 
-  @Column({ type: 'integer', default: 12 })
-  maxPlayers!: number;
-
-  @Column({ type: 'integer', default: 5 })
+  @Column({ type: 'integer', default: 3 })
   rounds!: number; // Количество раундов в игре
 
   @Column({ type: 'integer', default: 0 })
   currentRound!: number; // Текущий раунд (0 = не начиналась)
 
-  // ✅ Ресурсы (начальные)
+  // Ресурсы (начальные)
   @Column({ type: 'integer', default: 10 })
   startingCoins!: number; // Стартовый капитал
 
   @Column({ type: 'integer', default: 6 })
   workersPerPlayer!: number; // Количество работников у игрока
 
-  // ✅ Время игры
   @Column({ type: 'timestamp', nullable: true })
   startedAt?: Date; // Когда началась игра
 
@@ -71,13 +67,6 @@ export class Game {
   @Column({ type: 'integer', default: 0 })
   participantCount!: number; // Кэш количества участников
 
-  // ✅ Раунды игры
-  // @OneToMany(() => GameRound, (round) => round.session, {
-  //   cascade: true,
-  // })
-  // rounds_data!: GameRound[];
-
-  // ✅ Настройки видимости
   @Column({
     type: 'enum',
     enum: ['PUBLIC', 'PRIVATE', 'INVITE_ONLY'],
@@ -88,14 +77,12 @@ export class Game {
   @Column({ type: 'varchar', length: 50, nullable: true })
   inviteCode?: string; // Код для присоединения (если PRIVATE)
 
-  // ✅ Настройки контента
-  @Column({ type: 'uuid', nullable: true })
-  questionCategoryId?: string; // Категория вопросов
+  // todo: сделать нормальную связь с контентом для вопросов
+  // какие категории вопросов использовть,
+  // использовать ли вопросы организации или только глобальные вопросы или и те и те
+  // @Column({ type: 'uuid', nullable: true })
+  // questionCategoryId?: string;
 
-  @Column({ type: 'integer', nullable: true })
-  difficulty?: number; // Сложность (1-5)
-
-  // ✅ Режим игры
   @Column({
     type: 'enum',
     enum: ['REAL_TIME', 'TURN_BASED', 'HYBRID'],
@@ -103,21 +90,12 @@ export class Game {
   })
   gameMode!: 'REAL_TIME' | 'TURN_BASED' | 'HYBRID';
 
-  @Column({ type: 'integer', default: 300 }) // 5 минут на ход
-  turnTimeoutSeconds!: number;
-
-  // ✅ Награды и мониторинг
-  @Column({ type: 'integer', default: 0 })
-  rewardPool!: number; // Общий пул награды
+  @Column({ type: 'integer', default: 25 })
+  answerTimeoutSeconds!: number;
 
   @Column({ type: 'boolean', default: true })
   isRecorded!: boolean; // Записывать ли в статистику
 
-  // ✅ Информация о создателе (для истории)
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  creatorName?: string; // Сохраняем имя на случай удаления пользователя
-
-  // ✅ Аудит
   @CreateDateColumn()
   createdAt!: Date;
 
