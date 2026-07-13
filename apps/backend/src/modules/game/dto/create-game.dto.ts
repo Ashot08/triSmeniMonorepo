@@ -5,24 +5,13 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  IsUUID,
   Length,
   Max,
   Min,
 } from 'class-validator';
 import { GameStatus } from '../enums/game-status.enum';
-
-export enum GameVisibility {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE',
-  INVITE_ONLY = 'INVITE_ONLY',
-}
-
-export enum GameMode {
-  REAL_TIME = 'REAL_TIME',
-  TURN_BASED = 'TURN_BASED',
-  HYBRID = 'HYBRID',
-}
+import { GameVisibility } from '../enums/game-visibility.enum';
+import { GameMode } from '../enums/game-mode.enum';
 
 export class CreateGameDto {
   @IsString()

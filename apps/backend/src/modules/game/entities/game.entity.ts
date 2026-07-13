@@ -11,6 +11,9 @@ import {
 import { Organization } from '@/modules/organization/entities/organization.entity';
 import { GameStatus } from '../enums/game-status.enum';
 import { User } from '@/modules/user/entities/user.entity';
+import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
+import { GameMode } from '@/modules/game/enums/game-mode.enum';
+import { GameOwnerType } from '@/modules/game/enums/game-owner-type.enum';
 
 @Entity('games')
 @Index(['organization', 'status'])
@@ -32,6 +35,27 @@ export class Game {
     default: GameStatus.PENDING,
   })
   status!: GameStatus;
+
+  @Column({
+    type: 'enum',
+    enum: GameVisibility,
+    default: GameVisibility.PUBLIC,
+  })
+  visibility!: GameVisibility;
+
+  @Column({
+    type: 'enum',
+    enum: GameMode,
+    default: GameMode.PVB,
+  })
+  gameMode!: GameMode;
+
+  @Column({
+    type: 'enum',
+    enum: GameOwnerType,
+    default: GameOwnerType.PLATFORM,
+  })
+  ownerType!: GameOwnerType;
 
   @Column({ type: 'integer', default: 2 })
   playersCount!: number;
@@ -67,13 +91,6 @@ export class Game {
   @Column({ type: 'integer', default: 0 })
   participantCount!: number; // Кэш количества участников
 
-  @Column({
-    type: 'enum',
-    enum: ['PUBLIC', 'PRIVATE', 'INVITE_ONLY'],
-    default: 'PUBLIC',
-  })
-  visibility!: 'PUBLIC' | 'PRIVATE' | 'INVITE_ONLY';
-
   @Column({ type: 'varchar', length: 50, nullable: true })
   inviteCode?: string; // Код для присоединения (если PRIVATE)
 
@@ -82,13 +99,6 @@ export class Game {
   // использовать ли вопросы организации или только глобальные вопросы или и те и те
   // @Column({ type: 'uuid', nullable: true })
   // questionCategoryId?: string;
-
-  @Column({
-    type: 'enum',
-    enum: ['REAL_TIME', 'TURN_BASED', 'HYBRID'],
-    default: 'REAL_TIME',
-  })
-  gameMode!: 'REAL_TIME' | 'TURN_BASED' | 'HYBRID';
 
   @Column({ type: 'integer', default: 25 })
   answerTimeoutSeconds!: number;
