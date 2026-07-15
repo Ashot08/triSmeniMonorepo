@@ -2,7 +2,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
-  IsInt,
+  IsInt, IsNotEmpty,
   IsOptional,
   IsString,
   Length,
@@ -18,6 +18,15 @@ export class CreateGameDto {
   @Length(1, 255)
   name!: string;
 
+  @IsEnum(GameMode)
+  gameMode: GameMode;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(2)
+  @Max(100)
+  playersCount: number;
+
   @IsOptional()
   @IsString()
   description?: string;
@@ -25,12 +34,6 @@ export class CreateGameDto {
   @IsOptional()
   @IsEnum(GameStatus)
   status?: GameStatus;
-
-  @IsOptional()
-  @IsInt()
-  @Min(2)
-  @Max(100)
-  playersCount?: number;
 
   @IsOptional()
   @IsInt()
@@ -60,10 +63,6 @@ export class CreateGameDto {
   @IsString()
   @Length(4, 50)
   inviteCode?: string;
-
-  @IsOptional()
-  @IsEnum(GameMode)
-  gameMode?: GameMode;
 
   @IsOptional()
   @IsInt()

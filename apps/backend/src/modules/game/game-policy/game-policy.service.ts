@@ -8,18 +8,23 @@ import { GameCreationPolicy } from '@/modules/game/game-policy/interfaces/game-c
 import { RoleCode } from '@/common/enums/role.enum';
 import { Injectable } from '@nestjs/common';
 
+interface GameCreationContext {
+  user: JwtUser;
+  organizationId?: string;
+}
+
 @Injectable()
 export class GamePolicyService {
-  getPolicy(user: JwtUser): GameCreationPolicy {
-    if (user.roles.includes(RoleCode.PLATFORM_ADMIN)) {
+  getPolicy(context: GameCreationContext): GameCreationPolicy {
+    if (context.user.roles.includes(RoleCode.PLATFORM_ADMIN)) {
       return PLATFORM_ADMIN_POLICY;
     }
 
-    if (user.roles.includes(RoleCode.ORGANIZATION_OWNER)) {
+    if (context.organizationId) {
       return ORGANIZATION_POLICY;
     }
 
-    if (user.roles.includes(RoleCode.SUBSCRIPTION_OWNER)) {
+    if (context.user.roles.includes(RoleCode.SUBSCRIPTION_OWNER)) {
       return SUBSCRIPTION_OWNER_POLICY;
     }
 
