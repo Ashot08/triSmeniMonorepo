@@ -26,7 +26,7 @@ export class OrganizationGameController {
     return this.gameService.create({
         dto: createGameDto,
         organizationId,
-        createdBy: req.user.id,
+        user: req.user,
       }
     );
   }

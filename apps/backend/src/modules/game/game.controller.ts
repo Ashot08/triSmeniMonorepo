@@ -14,7 +14,7 @@ export class GameController {
 
     @Req() req: JwtRequest
   ) {
-    return this.gameService.create({dto, createdBy: req.user.id});
+    return this.gameService.create({dto, user: req.user});
   }
 
   @Get()
