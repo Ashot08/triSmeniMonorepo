@@ -15,7 +15,7 @@ interface GameCreationContext {
 
 @Injectable()
 export class GamePolicyService {
-  getPolicy(context: GameCreationContext): GameCreationPolicy {
+  getCreateGamePolicy(context: GameCreationContext): GameCreationPolicy {
     if (context.user.roles.includes(RoleCode.PLATFORM_ADMIN)) {
       return PLATFORM_ADMIN_POLICY;
     }
@@ -29,5 +29,9 @@ export class GamePolicyService {
     }
 
     return PLAYER_POLICY;
+  }
+
+  getJoinGamePolicy () {
+
   }
 }

@@ -2,19 +2,24 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import type { JwtRequest } from '@/modules/auth/interfaces/jwt.request.interface';
+import { CreateGameUseCase } from '@/modules/game/application/create-game.use-case';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 
 @Controller('game')
 export class GameController {
-  constructor(private readonly gameService: GameService) {}
+  constructor(
+    private readonly gameService: GameService,
+    private readonly createGameUseCase: CreateGameUseCase,
+  ) {}
 
   @Post()
   create(
     @Body() dto: CreateGameDto,
 
-    @Req() req: JwtRequest
+    @CurrentUser() user: JwtUser
   ) {
-    return this.gameService.create({dto, user: req.user});
+    return this.createGameUseCase.execute({dto, user});
   }
 
   @Get()

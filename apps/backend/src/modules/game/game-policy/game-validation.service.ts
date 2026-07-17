@@ -8,7 +8,7 @@ import { GameCreationPolicy } from './interfaces/game-creation-policy.interface'
 @Injectable()
 export class GameValidationService {
 
-  validate(
+  validateCreate(
     dto: CreateGameDto,
     policy: GameCreationPolicy,
   ): void {

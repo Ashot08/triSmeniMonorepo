@@ -1,13 +1,16 @@
-import { RequireOrganizationRoles } from '@/modules/organization/decorators/require-organization-roles.decorator';
+import { RequireOrganizationRoles } from '../decorators/require-organization-roles.decorator';
 import { OrganizationRoleCode } from '@/common/enums/organization.role.enum';
-import { Body, Controller, Param, ParseUUIDPipe, Post, Req } from '@nestjs/common';
-import { GameService } from '@/modules/game/game.service';
+import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { CreateGameDto } from '@/modules/game/dto/create-game.dto';
-import type { JwtRequest } from '@/modules/auth/interfaces/jwt.request.interface';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
+import { CreateGameUseCase } from '@/modules/game/application/create-game.use-case';
 
 @Controller('organizations/:organizationId/games')
 export class OrganizationGameController {
-  constructor(private readonly gameService: GameService) {
+  constructor(
+    private readonly createGameUseCase: CreateGameUseCase,
+  ) {
   }
 
   @RequireOrganizationRoles(
@@ -19,15 +22,14 @@ export class OrganizationGameController {
     organizationId: string,
 
     @Body()
-    createGameDto: CreateGameDto,
+    dto: CreateGameDto,
 
-    @Req() req: JwtRequest,
+    @CurrentUser() user: JwtUser,
   ) {
-    return this.gameService.create({
-        dto: createGameDto,
-        organizationId,
-        user: req.user,
-      }
-    );
+    return this.createGameUseCase.execute({
+      dto,
+      organizationId,
+      user,
+    });
   }
 }
