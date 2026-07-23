@@ -1,6 +1,4 @@
 export enum GameVisibility {
-  PRIVATE = 'private',
-  ORGANIZATION = 'organization',
-  PUBLIC = 'public',
-  UNLISTED = 'unlisted',
+  VISIBLE = 'visible',
+  HIDDEN = 'hidden',
 }

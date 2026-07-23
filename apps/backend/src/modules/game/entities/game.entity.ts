@@ -11,9 +11,10 @@ import {
 import { Organization } from '@/modules/organization/entities/organization.entity';
 import { GameStatus } from '../enums/game-status.enum';
 import { User } from '@/modules/user/entities/user.entity';
-import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
-import { GameMode } from '@/modules/game/enums/game-mode.enum';
-import { GameOwnerType } from '@/modules/game/enums/game-owner-type.enum';
+import { GameVisibility } from '../enums/game-visibility.enum';
+import { GameOwnerType } from '../enums/game-owner-type.enum';
+import { GamePvType } from '../enums/game-pv-type.enum';
+import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 
 @Entity('games')
 @Index(['organization', 'status'])
@@ -39,16 +40,23 @@ export class Game {
   @Column({
     type: 'enum',
     enum: GameVisibility,
-    default: GameVisibility.PUBLIC,
+    default: GameVisibility.VISIBLE,
   })
   visibility!: GameVisibility;
 
   @Column({
     type: 'enum',
-    enum: GameMode,
-    default: GameMode.PVB,
+    enum: GameJoinType,
+    default: GameJoinType.JOINABLE,
   })
-  gameMode!: GameMode;
+  joinType!: GameJoinType;
+
+  @Column({
+    type: 'enum',
+    enum: GamePvType,
+    default: GamePvType.PVB,
+  })
+  gamePvType!: GamePvType;
 
   @Column({
     type: 'enum',
@@ -61,7 +69,7 @@ export class Game {
   playersCount!: number;
 
   @Column({ type: 'integer', default: 3 })
-  rounds!: number; // Количество раундов в игре
+  shiftsCount!: number; // Количество раундов в игре
 
   @Column({ type: 'integer', default: 0 })
   currentRound!: number; // Текущий раунд (0 = не начиналась)
@@ -88,9 +96,6 @@ export class Game {
   // })
   // participants!: GameParticipant[];
 
-  @Column({ type: 'integer', default: 0 })
-  participantCount!: number; // Кэш количества участников
-
   @Column({ type: 'varchar', length: 50, nullable: true })
   inviteCode?: string; // Код для присоединения (если PRIVATE)
 
@@ -104,7 +109,7 @@ export class Game {
   answerTimeoutSeconds!: number;
 
   @Column({ type: 'boolean', default: true })
-  isRecorded!: boolean; // Записывать ли в статистику
+  isRecordedToStatistics: boolean; // Записывать ли в статистику
 
   @CreateDateColumn()
   createdAt!: Date;

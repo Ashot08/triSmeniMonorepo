@@ -1,0 +1,15 @@
+import { PendingGame } from './pending-game';
+
+export abstract class  PendingGameRepository {
+  abstract findById(id: string): Promise<PendingGame | null>;
+
+  abstract findPublic(): Promise<PendingGame[]>;
+
+  abstract findByOwner(ownerId: string): Promise<PendingGame[]>;
+
+  abstract findByOrganization(organizationId: string): Promise<PendingGame[]>;
+
+  abstract save(game: PendingGame): Promise<void>;
+
+  abstract remove(id: string): Promise<void>;
+}

@@ -1,6 +1,6 @@
 import { GameCreationPolicy } from '../interfaces/game-creation-policy.interface';
-import { GameMode } from '@/modules/game/enums/game-mode.enum';
 import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
+import { GamePvType } from '../../enums/game-pv-type.enum';
 
 export const PLAYER_POLICY: GameCreationPolicy = {
   maxPlayers: 2,
@@ -11,8 +11,8 @@ export const PLAYER_POLICY: GameCreationPolicy = {
   canInviteGuests: true,
 
   allowedGameModes: [
-    GameMode.PVP,
-    GameMode.PVB,
+    GamePvType.PVP,
+    GamePvType.PVB,
   ],
 
   allowedVisibilities: [
@@ -29,9 +29,9 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   canInviteGuests: true,
 
   allowedGameModes: [
-    GameMode.PVP,
-    GameMode.PVB,
-    GameMode.PVP_BOTS,
+    GamePvType.PVP,
+    GamePvType.PVB,
+    GamePvType.PVP_BOTS,
   ],
 
   allowedVisibilities: [
@@ -48,7 +48,7 @@ export const ORGANIZATION_POLICY: GameCreationPolicy = {
   canCreateTournament: true,
   canInviteGuests: true,
 
-  allowedGameModes: Object.values(GameMode),
+  allowedGameModes: Object.values(GamePvType),
 
   allowedVisibilities: [
     GameVisibility.PRIVATE,
@@ -64,7 +64,7 @@ export const PLATFORM_ADMIN_POLICY: GameCreationPolicy = {
   canCreateTournament: true,
   canInviteGuests: true,
 
-  allowedGameModes: Object.values(GameMode),
+  allowedGameModes: Object.values(GamePvType),
 
   allowedVisibilities: Object.values(GameVisibility),
 };
