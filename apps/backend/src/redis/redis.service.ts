@@ -9,32 +9,46 @@ export class RedisService {
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
-  async ping(): Promise<string> {
+  ping(): Promise<string> {
     return this.redis.ping();
   }
 
-  async set(
+  set(
     key: string,
     value: string,
     ttlSeconds?: number,
-  ): Promise<void> {
+  ): Promise<'OK'> {
     if (ttlSeconds) {
-      await this.redis.set(key, value, 'EX', ttlSeconds);
-      return;
+      return this.redis.set(key, value, 'EX', ttlSeconds);
     }
-
-    await this.redis.set(key, value);
+    return this.redis.set(key, value);
   }
 
-  async get(key: string): Promise<string | null> {
+  get(key: string): Promise<string | null> {
     return this.redis.get(key);
   }
 
-  async delete(
+  delete(
     key: string,
-  ): Promise<void> {
-    await this.redis.del(key);
+  ): Promise<number> {
+    return this.redis.del(key);
   }
+
+  sAdd(key: string, ...members: string[]) {
+    return this.redis.sadd(key, ...members);
+  }
+
+  sRem(key: string, ...members: string[]) {
+    return this.redis.srem(key, ...members);
+  }
+
+  sMembers(key: string) {
+    return this.redis.smembers(key);
+  }
+
+  // todo: по идее Redis service не должен знать о существовании сессии,
+  //  методы, связанные с сессиями нужно вынести отсюда в репозиторий redis-session
+  //  в модуле auth
 
   private getSessionKey(sessionId: string): string {
     return `auth:session:${sessionId}`;

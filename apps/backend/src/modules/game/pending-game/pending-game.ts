@@ -65,7 +65,6 @@ export class PendingGame {
     this.status = status;
     this.settings = settings;
     this.players = players;
-
   }
 
   static create(params: CreatePendingGameParams): PendingGame {
@@ -163,5 +162,9 @@ export class PendingGame {
 
   getSettings(): Readonly<PendingGameSettings> {
     return this.settings;
+  }
+
+  isPublic(): boolean {
+    return true;
   }
 }
