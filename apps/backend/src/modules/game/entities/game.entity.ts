@@ -15,6 +15,7 @@ import { GameVisibility } from '../enums/game-visibility.enum';
 import { GameOwnerType } from '../enums/game-owner-type.enum';
 import { GamePvType } from '../enums/game-pv-type.enum';
 import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
+import { defaultGameOptions } from '@/modules/game/constants/default-game-options';
 
 @Entity('games')
 @Index(['organization', 'status'])
@@ -68,17 +69,17 @@ export class Game {
   @Column({ type: 'integer', default: 2 })
   playersCount!: number;
 
-  @Column({ type: 'integer', default: 3 })
+  @Column({ type: 'integer', default: defaultGameOptions.SHIFTS_COUNT })
   shiftsCount!: number; // Количество раундов в игре
 
   @Column({ type: 'integer', default: 0 })
   currentRound!: number; // Текущий раунд (0 = не начиналась)
 
   // Ресурсы (начальные)
-  @Column({ type: 'integer', default: 10 })
+  @Column({ type: 'integer', default: defaultGameOptions.STARTING_COINS })
   startingCoins!: number; // Стартовый капитал
 
-  @Column({ type: 'integer', default: 6 })
+  @Column({ type: 'integer', default: defaultGameOptions.WORKERS_PER_PLAYER })
   workersPerPlayer!: number; // Количество работников у игрока
 
   @Column({ type: 'timestamp', nullable: true })
@@ -105,7 +106,7 @@ export class Game {
   // @Column({ type: 'uuid', nullable: true })
   // questionCategoryId?: string;
 
-  @Column({ type: 'integer', default: 25 })
+  @Column({ type: 'integer', default: defaultGameOptions.ANSWER_TIMEOUT_SECONDS })
   answerTimeoutSeconds!: number;
 
   @Column({ type: 'boolean', default: true })

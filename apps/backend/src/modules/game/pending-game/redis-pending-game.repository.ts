@@ -54,7 +54,7 @@ export class RedisPendingGameRepository extends PendingGameRepository {
       this.gameKey(game.id),
       JSON.stringify(game),
       60 * 300,
-      // todo по идее редис не должен удалять игру
+      // todo по идее редис не должен удалять игру по TTL
       // это нужно делать в отдельном юз-кейсе или сервисе
       // так как при удалении игры нужно вызывать соотв. событие
       // и удалять связанные с ней индексы/фильтры из редиса

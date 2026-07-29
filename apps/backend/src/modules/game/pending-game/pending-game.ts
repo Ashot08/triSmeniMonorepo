@@ -4,6 +4,10 @@ import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
 import { GameOwnerType } from '@/modules/game/enums/game-owner-type.enum';
 import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
 import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
+import { GameQuestionsType } from '@/modules/game/enums/game-questions-type.enum';
+
+// todo: решить потенциальную проблему concurrency
+// например, с помощью version
 
 export enum PendingGameStatus {
   WAITING = 'waiting',
@@ -17,9 +21,9 @@ export interface PendingGamePlayer {
 }
 
 
-interface CreatePendingGameParams {
+export interface CreatePendingGameParams {
   ownerId: string;
-  organizationId: string | null;
+  organizationId: string | undefined;
   settings: PendingGameSettings;
 }
 
@@ -40,12 +44,13 @@ interface PendingGameSettings {
   // questionCategoryId?: QuestionCat[]; // какие категории вопросов использовть,
   answerTimeoutSeconds: number;
   isRecordedToStatistics: boolean;
+  questionsType: GameQuestionsType;
 }
 
 export class PendingGame {
   readonly id: string;
   readonly ownerId: string;
-  readonly organizationId: string | null;
+  readonly organizationId: string | undefined;
   readonly settings: PendingGameSettings;
 
   private status: PendingGameStatus;
@@ -54,7 +59,7 @@ export class PendingGame {
   private constructor(
     id: string,
     ownerId: string,
-    organizationId: string | null,
+    organizationId: string | undefined,
     status: PendingGameStatus,
     settings: PendingGameSettings,
     players: PendingGamePlayer[],

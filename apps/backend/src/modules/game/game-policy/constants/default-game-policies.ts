@@ -16,7 +16,7 @@ export const PLAYER_POLICY: GameCreationPolicy = {
   ],
 
   allowedVisibilities: [
-    GameVisibility.PUBLIC,
+    GameVisibility.VISIBLE,
   ],
 };
 
@@ -35,8 +35,8 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   ],
 
   allowedVisibilities: [
-    GameVisibility.PRIVATE,
-    GameVisibility.PUBLIC,
+    GameVisibility.VISIBLE,
+    GameVisibility.HIDDEN,
   ],
 };
 
@@ -51,8 +51,8 @@ export const ORGANIZATION_POLICY: GameCreationPolicy = {
   allowedGameModes: Object.values(GamePvType),
 
   allowedVisibilities: [
-    GameVisibility.PRIVATE,
-    GameVisibility.ORGANIZATION,
+    GameVisibility.VISIBLE,
+    GameVisibility.HIDDEN,
   ],
 };
 

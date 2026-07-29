@@ -9,17 +9,15 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { GameStatus } from '../enums/game-status.enum';
 import { GameVisibility } from '../enums/game-visibility.enum';
-import { GameMode } from '../enums/game-mode.enum';
+import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
+import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
+import { GameQuestionsType } from '@/modules/game/enums/game-questions-type.enum';
 
 export class CreateGameDto {
   @IsString()
   @Length(1, 255)
   name!: string;
-
-  @IsEnum(GameMode)
-  gameMode: GameMode;
 
   @IsNotEmpty()
   @IsInt()
@@ -32,14 +30,26 @@ export class CreateGameDto {
   description?: string;
 
   @IsOptional()
-  @IsEnum(GameStatus)
-  status?: GameStatus;
+  @IsEnum(GameJoinType)
+  joinType?: GameJoinType;
+
+  @IsOptional()
+  @IsEnum(GamePvType)
+  gamePvType?: GamePvType;
+
+  @IsOptional()
+  @IsEnum(GameVisibility)
+  visibility?: GameVisibility;
+
+  @IsOptional()
+  @IsEnum(GameQuestionsType)
+  questionsType?: GameQuestionsType;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(100)
-  rounds?: number;
+  shiftsCount?: number;
 
   @IsOptional()
   @IsInt()
@@ -56,10 +66,6 @@ export class CreateGameDto {
   scheduledStartAt?: string;
 
   @IsOptional()
-  @IsEnum(GameVisibility)
-  visibility?: GameVisibility;
-
-  @IsOptional()
   @IsString()
   @Length(4, 50)
   inviteCode?: string;
@@ -72,5 +78,5 @@ export class CreateGameDto {
 
   @IsOptional()
   @IsBoolean()
-  isRecorded?: boolean;
+  isRecordedToStatistics?: boolean;
 }
