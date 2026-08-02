@@ -1,7 +1,5 @@
 import { randomUUID } from 'crypto';
-import { GameStatus } from '@/modules/game/enums/game-status.enum';
 import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
-import { GameOwnerType } from '@/modules/game/enums/game-owner-type.enum';
 import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
 import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 import { GameQuestionsType } from '@/modules/game/enums/game-questions-type.enum';
@@ -170,6 +168,10 @@ export class PendingGame {
   }
 
   isPublic(): boolean {
-    return true;
+    return this.settings.visibility === GameVisibility.VISIBLE;
   }
+  isPvP(): boolean {
+    return this.settings.gamePvType === GamePvType.PVP;
+  }
+
 }

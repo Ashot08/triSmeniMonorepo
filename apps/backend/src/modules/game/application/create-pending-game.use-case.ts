@@ -21,6 +21,7 @@ export class CreateGameUseCase {
     const policy = this.gamePolicyService.getCreateGamePolicy({
       user: command.user,
       organizationId: command.organizationId,
+      organizationRoles: command.organizationRoles,
     });
 
     this.gameValidationService.validateCreate(

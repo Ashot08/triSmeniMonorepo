@@ -5,6 +5,8 @@ import { CreateGameDto } from '@/modules/game/dto/create-game.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 import { CreateGameUseCase } from '@/modules/game/application/create-game.use-case';
+import { CurrentOrganizationContext } from '../decorators/current-organization-context.decorator';
+import { type OrganizationContext } from '@/modules/auth/interfaces/jwt.request.interface';
 
 @Controller('organizations/:organizationId/games')
 export class OrganizationGameController {
@@ -25,10 +27,14 @@ export class OrganizationGameController {
     dto: CreateGameDto,
 
     @CurrentUser() user: JwtUser,
+
+    @CurrentOrganizationContext()
+    organizationContext: OrganizationContext,
   ) {
     return this.createGameUseCase.execute({
       dto,
       organizationId,
+      organizationRoles: organizationContext.roles,
       user,
     });
   }

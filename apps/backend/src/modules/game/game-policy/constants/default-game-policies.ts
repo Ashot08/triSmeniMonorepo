@@ -40,7 +40,7 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   ],
 };
 
-export const ORGANIZATION_POLICY: GameCreationPolicy = {
+export const ORGANIZATION_ADMIN_POLICY: GameCreationPolicy = {
   maxPlayers: 20,
 
   canUseCustomQuestions: true,
@@ -53,6 +53,24 @@ export const ORGANIZATION_POLICY: GameCreationPolicy = {
   allowedVisibilities: [
     GameVisibility.VISIBLE,
     GameVisibility.HIDDEN,
+  ],
+};
+
+export const ORGANIZATION_PLAYER_POLICY: GameCreationPolicy = {
+  maxPlayers: 2,
+
+  canUseCustomQuestions: false,
+  canBranding: false,
+  canCreateTournament: false,
+  canInviteGuests: true,
+
+  allowedGameModes: [
+    GamePvType.PVP,
+    GamePvType.PVB,
+  ],
+
+  allowedVisibilities: [
+    GameVisibility.VISIBLE,
   ],
 };
 

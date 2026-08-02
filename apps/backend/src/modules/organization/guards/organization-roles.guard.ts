@@ -32,10 +32,6 @@ export class OrganizationRolesGuard implements CanActivate {
         ],
       );
 
-    if (!requiredRoles?.length) {
-      return true;
-    }
-
     const request =
       context.switchToHttp().getRequest<JwtRequest>();
 
@@ -52,16 +48,28 @@ export class OrganizationRolesGuard implements CanActivate {
       throw new BadRequestException('Invalid organization id');
     }
 
-    const hasRole =
-      await this.membershipService.hasAnyRole(
-        userId,
-        organizationId,
-        requiredRoles,
-      );
+    const roles = await this.membershipService.findRoleCodes(
+      userId,
+      organizationId,
+    );
 
-    if (!hasRole) {
+    if (!roles.length) {
       throw new ForbiddenException();
     }
+
+    if (requiredRoles?.length) {
+      const hasRole = requiredRoles.some(role =>
+        roles.includes(role),
+      );
+
+      if (!hasRole) {
+        throw new ForbiddenException();
+      }
+    }
+
+    request.organizationContext = {
+      roles,
+    };
 
     return true;
   }

@@ -110,6 +110,13 @@ export class RedisPendingGameRepository extends PendingGameRepository {
         game.id,
       );
     }
+
+    if (game.isPvP()) {
+      await this.redis.sAdd(
+        this.pVpGamesKey(),
+        game.id,
+      );
+    }
   }
 
   private async unindex(
@@ -133,6 +140,13 @@ export class RedisPendingGameRepository extends PendingGameRepository {
         game.id,
       );
     }
+
+    if (game.isPvP()) {
+      await this.redis.sRem(
+        this.pVpGamesKey(),
+        game.id,
+      );
+    }
   }
 
   // ---------------------------------------------------------
@@ -153,5 +167,9 @@ export class RedisPendingGameRepository extends PendingGameRepository {
 
   private publicGamesKey(): string {
     return 'pending-game:public';
+  }
+
+  private pVpGamesKey(): string {
+    return 'pending-game:pvp';
   }
 }
