@@ -4,14 +4,14 @@ import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { CreateGameDto } from '@/modules/game/dto/create-game.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
-import { CreateGameUseCase } from '@/modules/game/application/create-game.use-case';
 import { CurrentOrganizationContext } from '../decorators/current-organization-context.decorator';
 import { type OrganizationContext } from '@/modules/auth/interfaces/jwt.request.interface';
+import { CreatePendingGameUseCase } from '@/modules/game/application/create-pending-game.use-case';
 
 @Controller('organizations/:organizationId/games')
 export class OrganizationGameController {
   constructor(
-    private readonly createGameUseCase: CreateGameUseCase,
+    private readonly createPendingGameUseCase: CreatePendingGameUseCase,
   ) {
   }
 
@@ -31,7 +31,7 @@ export class OrganizationGameController {
     @CurrentOrganizationContext()
     organizationContext: OrganizationContext,
   ) {
-    return this.createGameUseCase.execute({
+    return this.createPendingGameUseCase.execute({
       dto,
       organizationId,
       organizationRoles: organizationContext.roles,

@@ -2,15 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { CreateGameUseCase } from '@/modules/game/application/create-game.use-case';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
+import { CreatePendingGameUseCase } from './application/create-pending-game.use-case';
 
 @Controller('game')
 export class GameController {
   constructor(
     private readonly gameService: GameService,
-    private readonly createGameUseCase: CreateGameUseCase,
+    private readonly createPendingGameUseCase: CreatePendingGameUseCase,
   ) {}
 
   @Post()
@@ -19,7 +19,7 @@ export class GameController {
 
     @CurrentUser() user: JwtUser
   ) {
-    return this.createGameUseCase.execute({dto, user});
+    return this.createPendingGameUseCase.execute({dto, user});
   }
 
   @Get()

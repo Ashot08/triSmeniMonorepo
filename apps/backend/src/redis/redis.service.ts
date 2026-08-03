@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '@/common/constants/injection-tokens';
 import { Session } from '@/modules/auth/interfaces/session.interface';
+import { RedisTransaction } from './lib/redis-transaction';
 
 @Injectable()
 export class RedisService {
@@ -46,7 +47,22 @@ export class RedisService {
     return this.redis.smembers(key);
   }
 
-  // todo: по идее Redis service не должен знать о существовании сессии,
+  async transaction<T>(
+    callback: (
+      tx: RedisTransaction,
+    ) => Promise<T> | T,
+  ): Promise<T> {
+
+    const tx = new RedisTransaction(
+      this.redis.multi(),
+    );
+
+    const result = await callback(tx);
+    await tx.exec();
+    return result;
+  }
+
+  // todo: Redis service не должен знать о существовании сессии,
   //  методы, связанные с сессиями нужно вынести отсюда в репозиторий redis-session
   //  в модуле auth
 

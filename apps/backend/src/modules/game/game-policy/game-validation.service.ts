@@ -2,50 +2,61 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { CreateGameDto } from '@/modules/game/dto/create-game.dto';
 import { GameCreationPolicy } from './interfaces/game-creation-policy.interface';
+import { PendingGameSettings } from '@/modules/game/pending-game/pending-game';
 
 @Injectable()
 export class GameValidationService {
 
   validateCreate(
-    dto: CreateGameDto,
+    settings: PendingGameSettings,
     policy: GameCreationPolicy,
   ): void {
-    this.validatePlayers(dto, policy);
-    this.validateMode(dto, policy);
-    this.validateVisibility(dto, policy);
+    this.validatePlayers(settings, policy);
+    this.validatePvType(settings, policy);
+    this.validateVisibility(settings, policy);
   }
 
   private validatePlayers(
-    dto: CreateGameDto,
+    settings: PendingGameSettings,
     policy: GameCreationPolicy,
   ) {
-    if (dto.playersCount > policy.maxPlayers) {
+    if (settings.playersCount > policy.maxPlayers) {
       throw new ForbiddenException(
         `Maximum ${policy.maxPlayers} players allowed.`,
       );
     }
   }
 
-  private validateMode(
-    dto: CreateGameDto,
+  private validatePvType(
+    settings: PendingGameSettings,
     policy: GameCreationPolicy,
   ) {
-    if (!policy.allowedGameModes.includes(dto.gameMode)) {
+    if (!policy.allowedGamePvTypes.includes(settings.gamePvType)) {
       throw new ForbiddenException(
-        'Selected game mode is unavailable.',
+        'Selected pv type mode is unavailable.',
+      );
+    }
+  }
+
+  private validateJoinType(
+    settings: PendingGameSettings,
+    policy: GameCreationPolicy,
+  ) {
+    if (!policy.allowedJoinTypes.includes(settings.joinType)) {
+      throw new ForbiddenException(
+        'Selected join type mode is unavailable.',
       );
     }
   }
 
   private validateVisibility(
-    dto: CreateGameDto,
+    settings: PendingGameSettings,
     policy: GameCreationPolicy,
   ) {
-    if (dto.visibility && (
+    if (settings.visibility && (
       !policy.allowedVisibilities.includes(
-        dto.visibility,
+        settings.visibility,
       )
     )) {
       throw new ForbiddenException(

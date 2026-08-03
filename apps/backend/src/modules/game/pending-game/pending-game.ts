@@ -25,7 +25,7 @@ export interface CreatePendingGameParams {
   settings: PendingGameSettings;
 }
 
-interface PendingGameSettings {
+export interface PendingGameSettings {
   name: string;
   description?: string;
   // status: GameStatus;

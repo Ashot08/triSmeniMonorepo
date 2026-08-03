@@ -1,5 +1,6 @@
-import { GameMode } from '@/modules/game/enums/game-mode.enum';
+import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
+import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
 
 export interface GameCreationPolicy {
   maxPlayers: number;
@@ -9,6 +10,8 @@ export interface GameCreationPolicy {
   canCreateTournament: boolean;
   canInviteGuests: boolean;
 
-  allowedGameModes: GameMode[];
+
+  allowedGamePvTypes: GamePvType[];
   allowedVisibilities: GameVisibility[];
+  allowedJoinTypes: GameJoinType[];
 }

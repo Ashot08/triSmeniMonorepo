@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { PendingGameRepository } from './pending-game.repository';
 import { PendingGame } from './pending-game';
 import { RedisService } from '@/redis/redis.service';
@@ -50,19 +49,48 @@ export class RedisPendingGameRepository extends PendingGameRepository {
   }
 
   async save(game: PendingGame): Promise<void> {
-    await this.redis.set(
-      this.gameKey(game.id),
-      JSON.stringify(game),
-      60 * 300,
-      // todo по идее редис не должен удалять игру по TTL
-      // это нужно делать в отдельном юз-кейсе или сервисе
-      // так как при удалении игры нужно вызывать соотв. событие
-      // и удалять связанные с ней индексы/фильтры из редиса
-      // иначе там будет копиться мусор.
-      // так что TTL тут не совсем уместно.
-    );
+    // это должно быть транзакцией с помощью this.redis.multi();
 
-    await this.index(game);
+    await this.redis.transaction(tx => {
+      tx.set(
+        this.gameKey(game.id),
+        JSON.stringify(game),
+        60 * 300,
+        // todo по идее редис не должен удалять игру по TTL
+        // это нужно делать в отдельном юз-кейсе или сервисе
+        // так как при удалении игры нужно вызывать соотв. событие
+        // и удалять связанные с ней индексы/фильтры из редиса
+        // иначе там будет копиться мусор.
+        // так что TTL тут не совсем уместно.
+      );
+
+      tx.sAdd(
+        this.ownerKey(game.ownerId),
+        game.id,
+      );
+
+      if (game.organizationId) {
+        tx.sAdd(
+          this.organizationKey(game.organizationId),
+          game.id,
+        );
+      }
+
+      if (game.isPublic()) {
+        tx.sAdd(
+          this.publicGamesKey(),
+          game.id,
+        );
+      }
+
+      if (game.isPvP()) {
+        tx.sAdd(
+          this.pVpGamesKey(),
+          game.id,
+        );
+      }
+    });
+
   }
 
   async remove(id: string): Promise<void> {
@@ -72,9 +100,35 @@ export class RedisPendingGameRepository extends PendingGameRepository {
       return;
     }
 
-    await this.redis.delete(this.gameKey(id));
+    await this.redis.transaction(tx => {
+      tx.delete(this.gameKey(id));
 
-    await this.unindex(game);
+      tx.sRem(
+        this.ownerKey(game.ownerId),
+        game.id,
+      );
+
+      if (game.organizationId) {
+        tx.sRem(
+          this.organizationKey(game.organizationId),
+          game.id,
+        );
+      }
+
+      if (game.isPublic()) {
+        tx.sRem(
+          this.publicGamesKey(),
+          game.id,
+        );
+      }
+
+      if (game.isPvP()) {
+        tx.sRem(
+          this.pVpGamesKey(),
+          game.id,
+        );
+      }
+    });
   }
 
   // ---------------------------------------------------------
@@ -91,63 +145,6 @@ export class RedisPendingGameRepository extends PendingGameRepository {
     );
   }
 
-  private async index(game: PendingGame): Promise<void> {
-    await this.redis.sAdd(
-      this.ownerKey(game.ownerId),
-      game.id,
-    );
-
-    if (game.organizationId) {
-      await this.redis.sAdd(
-        this.organizationKey(game.organizationId),
-        game.id,
-      );
-    }
-
-    if (game.isPublic()) {
-      await this.redis.sAdd(
-        this.publicGamesKey(),
-        game.id,
-      );
-    }
-
-    if (game.isPvP()) {
-      await this.redis.sAdd(
-        this.pVpGamesKey(),
-        game.id,
-      );
-    }
-  }
-
-  private async unindex(
-    game: PendingGame,
-  ): Promise<void> {
-    await this.redis.sRem(
-      this.ownerKey(game.ownerId),
-      game.id,
-    );
-
-    if (game.organizationId) {
-      await this.redis.sRem(
-        this.organizationKey(game.organizationId),
-        game.id,
-      );
-    }
-
-    if (game.isPublic()) {
-      await this.redis.sRem(
-        this.publicGamesKey(),
-        game.id,
-      );
-    }
-
-    if (game.isPvP()) {
-      await this.redis.sRem(
-        this.pVpGamesKey(),
-        game.id,
-      );
-    }
-  }
 
   // ---------------------------------------------------------
 
