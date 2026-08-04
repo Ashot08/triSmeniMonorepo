@@ -4,13 +4,11 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
-import { CreatePendingGameUseCase } from './application/create-pending-game.use-case';
 
 @Controller('game')
 export class GameController {
   constructor(
     private readonly gameService: GameService,
-    private readonly createPendingGameUseCase: CreatePendingGameUseCase,
   ) {}
 
   @Post()
@@ -19,7 +17,7 @@ export class GameController {
 
     @CurrentUser() user: JwtUser
   ) {
-    return this.createPendingGameUseCase.execute({dto, user});
+    return this.gameService.create({dto, createdById: user.id});
   }
 
   @Get()

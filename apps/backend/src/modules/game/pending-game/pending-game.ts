@@ -54,7 +54,7 @@ export class PendingGame {
   private status: PendingGameStatus;
   private readonly players: PendingGamePlayer[];
 
-  private constructor(
+  constructor(
     id: string,
     ownerId: string,
     organizationId: string | undefined,

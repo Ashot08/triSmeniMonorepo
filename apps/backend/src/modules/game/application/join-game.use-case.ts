@@ -12,10 +12,10 @@ export class JoinGameUseCase {
     @Inject(PendingGameRepository) private readonly pendingGameRepository: PendingGameRepository,
   ) {}
   async execute(command: JoinGameCommand) {
-    // получаем иру из репозитория, при этом репозиторий должен делать restore игры и
+    const game = await this.pendingGameRepository.findById(command.id);
     // возвращать объект доменной сущности PendingGame
     // PendingGame.join(...)
     // pendingGameRepository.save(...)
+    return game;
   }
-
 }

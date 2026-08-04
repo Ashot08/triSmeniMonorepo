@@ -17,10 +17,15 @@ export class RedisPendingGameRepository extends PendingGameRepository {
     if (!json) {
       return null;
     }
-    // todo: переделать
-    return Object.assign(
-      Object.create(PendingGame.prototype),
-      JSON.parse(json),
+    const data = JSON.parse(json);
+
+    return new PendingGame(
+      data.id,
+      data.ownerId,
+      data.organizationId,
+      data.status,
+      data.settings,
+      data.players,
     );
   }
 

@@ -6,7 +6,7 @@
 
 Например:
 
-GameController
+PendingGameController
 │
 ▼
 CreateGameApplicationService
@@ -37,7 +37,7 @@ OrganizationRoleGuard
 
 ↓
 
-GameController
+PendingGameController
 
 ↓
 
