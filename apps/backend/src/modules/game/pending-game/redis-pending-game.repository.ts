@@ -29,6 +29,37 @@ export class RedisPendingGameRepository extends PendingGameRepository {
     );
   }
 
+  async findPublicById(gameId: string): Promise<PendingGame | null> {
+    const game = await this.findById(gameId);
+
+    if (!game) {
+      return null;
+    }
+
+    if (game.organizationId) {
+      return null;
+    }
+
+    return game;
+  }
+
+  async findOrganizationGameById(
+    organizationId: string,
+    gameId: string,
+  ): Promise<PendingGame | null> {
+    const game = await this.findById(gameId);
+
+    if (!game) {
+      return null;
+    }
+
+    if (game.organizationId !== organizationId) {
+      return null;
+    }
+
+    return game;
+  }
+
   async findByOwner(ownerId: string): Promise<PendingGame[]> {
     const ids = await this.redis.sMembers(this.ownerKey(ownerId));
 
