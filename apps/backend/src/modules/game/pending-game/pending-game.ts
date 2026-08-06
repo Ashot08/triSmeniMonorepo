@@ -14,7 +14,6 @@ export enum PendingGameStatus {
 
 export interface PendingGamePlayer {
   id: string;
-  ready: boolean;
   joinedAt: Date;
 }
 
@@ -46,6 +45,7 @@ export interface PendingGameSettings {
 }
 
 export class PendingGame {
+  readonly version: number;
   readonly id: string;
   readonly ownerId: string;
   readonly organizationId: string | undefined;
@@ -80,7 +80,6 @@ export class PendingGame {
       [
         {
           id: params.ownerId,
-          ready: false,
           joinedAt: new Date(),
         },
       ],
@@ -102,7 +101,6 @@ export class PendingGame {
 
     this.players.push({
       id: playerId,
-      ready: false,
       joinedAt: new Date(),
     });
   }
@@ -119,39 +117,9 @@ export class PendingGame {
     this.players.splice(index, 1);
   }
 
-  ready(playerId: string): void {
-    const player = this.players.find(
-      player => player.id === playerId,
-    );
-
-    if (!player) {
-      throw new Error('Player not found');
-    }
-
-    player.ready = true;
-
-    if (this.canStart()) {
-      this.status = PendingGameStatus.READY;
-    }
-  }
-
-  unready(playerId: string): void {
-    const player = this.players.find(
-      player => player.id === playerId,
-    );
-
-    if (!player) {
-      throw new Error('Player not found');
-    }
-
-    player.ready = false;
-    this.status = PendingGameStatus.WAITING;
-  }
-
   canStart(): boolean {
     return (
-      this.players.length === this.settings.playersCount &&
-      this.players.every(player => player.ready)
+      this.players.length === this.settings.playersCount
     );
   }
 

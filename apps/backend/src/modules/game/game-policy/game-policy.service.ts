@@ -2,7 +2,7 @@ import {
   ORGANIZATION_ADMIN_POLICY, ORGANIZATION_PLAYER_POLICY,
   PLATFORM_ADMIN_POLICY, PLAYER_POLICY,
   SUBSCRIPTION_OWNER_POLICY
-} from './constants/default-game-creation-policies';
+} from './constants/default-game-creation.policies';
 import { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 import { GameCreationPolicy } from '@/modules/game/game-policy/interfaces/game-creation-policy.interface';
 import { RoleCode } from '@/common/enums/role.enum';
@@ -44,6 +44,6 @@ export class GamePolicyService {
   }
 
   getJoinGamePolicy () {
-
+    return PLAYER_POLICY;
   }
 }

@@ -14,6 +14,10 @@ export class RedisService {
     return this.redis.ping();
   }
 
+  client(): Redis {
+    return this.redis;
+  }
+
   set(
     key: string,
     value: string,
@@ -45,21 +49,6 @@ export class RedisService {
 
   sMembers(key: string) {
     return this.redis.smembers(key);
-  }
-
-  async transaction<T>(
-    callback: (
-      tx: RedisTransaction,
-    ) => Promise<T> | T,
-  ): Promise<T> {
-
-    const tx = new RedisTransaction(
-      this.redis.multi(),
-    );
-
-    const result = await callback(tx);
-    await tx.exec();
-    return result;
   }
 
   // todo: Redis service не должен знать о существовании сессии,

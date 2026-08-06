@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GameValidationService } from '@/modules/game/game-policy/game-validation.service';
 import { GamePolicyService } from '@/modules/game/game-policy/game-policy.service';
 import { PendingGameRepository } from '@/modules/game/pending-game/pending-game.repository';
@@ -13,9 +13,16 @@ export class JoinGameUseCase {
   ) {}
   async execute(command: JoinGameCommand) {
     const game = await this.pendingGameRepository.findById(command.id);
-    // возвращать объект доменной сущности PendingGame
-    // PendingGame.join(...)
-    // pendingGameRepository.save(...)
-    return game;
+
+    if(!game) {
+      throw new NotFoundException('Game does not exist');
+    }
+
+    const policy = this.gamePolicyService.getJoinGamePolicy();
+    this.gameValidationService.validateJoin(game.settings, policy);
+
+    game.join(command.user.id);
+
+    return this.pendingGameRepository.save(game);
   }
 }

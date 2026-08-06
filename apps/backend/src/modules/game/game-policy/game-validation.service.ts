@@ -4,6 +4,8 @@ import {
 } from '@nestjs/common';
 import { GameCreationPolicy } from './interfaces/game-creation-policy.interface';
 import { PendingGameSettings } from '@/modules/game/pending-game/pending-game';
+import { GameJoinTypePolicy } from '@/modules/game/game-policy/interfaces/join-game-policy.interface';
+import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 
 @Injectable()
 export class GameValidationService {
@@ -15,6 +17,13 @@ export class GameValidationService {
     this.validatePlayers(settings, policy);
     this.validatePvType(settings, policy);
     this.validateVisibility(settings, policy);
+  }
+
+  validateJoin(
+    settings: PendingGameSettings,
+    policy: GameJoinTypePolicy,
+  ): void {
+    this.validateJoinType(settings, policy);
   }
 
   private validatePlayers(
@@ -41,7 +50,7 @@ export class GameValidationService {
 
   private validateJoinType(
     settings: PendingGameSettings,
-    policy: GameCreationPolicy,
+    policy: GameJoinTypePolicy,
   ) {
     if (!policy.allowedJoinTypes.includes(settings.joinType)) {
       throw new ForbiddenException(

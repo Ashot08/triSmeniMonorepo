@@ -85,47 +85,57 @@ export class RedisPendingGameRepository extends PendingGameRepository {
   }
 
   async save(game: PendingGame): Promise<void> {
-    // это должно быть транзакцией с помощью this.redis.multi();
+    const redis = this.redis.client();
+    const gameKey = this.gameKey(game.id);
 
-    await this.redis.transaction(tx => {
-      tx.set(
-        this.gameKey(game.id),
-        JSON.stringify(game),
-        60 * 300,
-        // todo по идее редис не должен удалять игру по TTL
-        // это нужно делать в отдельном юз-кейсе или сервисе
-        // так как при удалении игры нужно вызывать соотв. событие
-        // и удалять связанные с ней индексы/фильтры из редиса
-        // иначе там будет копиться мусор.
-        // так что TTL тут не совсем уместно.
-      );
+    // todo: добавить проверку и обновление версии
+    // с помощью redis.watch
+    //
 
-      tx.sAdd(
-        this.ownerKey(game.ownerId),
-        game.id,
-      );
+
+    const stored = await this.findById(gameKey);
+    // Если игры нет — значит это первое сохранение
+    if (stored) {
+      if (stored.version !== game.version) {
+        throw new ConcurrencyException();
+      }
+      stored.version += 1;
+    }
+
+
+
+    await redis.watch(gameKey);
+
+    try {
+      const tx = redis.multi()
+
+      tx.set(gameKey, JSON.stringify(game), 'EX', 60*300);
+
+      tx.sadd(this.ownerKey(game.ownerId), game.id);
 
       if (game.organizationId) {
-        tx.sAdd(
-          this.organizationKey(game.organizationId),
-          game.id,
-        );
+        tx.sadd(this.organizationKey(game.organizationId), game.id,);
       }
 
       if (game.isPublic()) {
-        tx.sAdd(
-          this.publicGamesKey(),
-          game.id,
-        );
+        tx.sadd(this.publicGamesKey(), game.id,);
       }
 
       if (game.isPvP()) {
-        tx.sAdd(
-          this.pVpGamesKey(),
-          game.id,
-        );
+        tx.sadd(this.pVpGamesKey(), game.id,);
       }
-    });
+
+      await tx.exec();
+
+      // todo: всё таки нужно сохранить персистентность версии
+      // поэтому, несмотря на то, что в большинстве кейсов агрегат
+      // заканчивает свой жизненный цикл после метода save,
+      // всё равно нужно обновить его версию, на всякий случай.
+      // game.updateVersion(nextVersion);
+
+    } finally {
+      await redis.unwatch();
+    }
 
   }
 
@@ -136,35 +146,25 @@ export class RedisPendingGameRepository extends PendingGameRepository {
       return;
     }
 
-    await this.redis.transaction(tx => {
-      tx.delete(this.gameKey(id));
+    const redis = this.redis.client();
 
-      tx.sRem(
-        this.ownerKey(game.ownerId),
-        game.id,
-      );
+    const tx = redis.multi()
 
-      if (game.organizationId) {
-        tx.sRem(
-          this.organizationKey(game.organizationId),
-          game.id,
-        );
-      }
+    tx.del(this.gameKey(id));
 
-      if (game.isPublic()) {
-        tx.sRem(
-          this.publicGamesKey(),
-          game.id,
-        );
-      }
+    tx.srem(this.ownerKey(game.ownerId), game.id,);
 
-      if (game.isPvP()) {
-        tx.sRem(
-          this.pVpGamesKey(),
-          game.id,
-        );
-      }
-    });
+    if (game.organizationId) {
+      tx.srem(this.organizationKey(game.organizationId), game.id,);
+    }
+
+    if (game.isPublic()) {
+      tx.srem(this.publicGamesKey(), game.id,);
+    }
+
+    if (game.isPvP()) {
+      tx.srem(this.pVpGamesKey(), game.id,);
+    }
   }
 
   // ---------------------------------------------------------
