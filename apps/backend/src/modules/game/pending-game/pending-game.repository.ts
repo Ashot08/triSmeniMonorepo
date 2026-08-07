@@ -16,7 +16,9 @@ export abstract class  PendingGameRepository {
 
   abstract findByOrganization(organizationId: string): Promise<PendingGame[]>;
 
-  abstract save(game: PendingGame): Promise<void>;
+  abstract create(game: PendingGame): Promise<void>;
+
+  abstract update(game: PendingGame): Promise<void>;
 
   abstract remove(id: string): Promise<void>;
 }

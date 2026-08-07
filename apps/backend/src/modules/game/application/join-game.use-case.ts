@@ -23,6 +23,6 @@ export class JoinGameUseCase {
 
     game.join(command.user.id);
 
-    return this.pendingGameRepository.save(game);
+    return this.pendingGameRepository.update(game);
   }
 }

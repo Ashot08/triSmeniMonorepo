@@ -50,6 +50,6 @@ export class CreatePendingGameUseCase {
       }
     );
 
-    return this.pendingGameRepository.save(game);
+    return this.pendingGameRepository.create(game);
   }
 }

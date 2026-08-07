@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PendingGameRepository } from './pending-game.repository';
 import { PendingGame } from './pending-game';
 import { RedisService } from '@/redis/redis.service';
+import { PendingGameMapper } from './pending-game.mapper';
 
 @Injectable()
 export class RedisPendingGameRepository extends PendingGameRepository {
@@ -17,16 +18,8 @@ export class RedisPendingGameRepository extends PendingGameRepository {
     if (!json) {
       return null;
     }
-    const data = JSON.parse(json);
 
-    return new PendingGame(
-      data.id,
-      data.ownerId,
-      data.organizationId,
-      data.status,
-      data.settings,
-      data.players,
-    );
+    return PendingGameMapper.fromRedis(json);
   }
 
   async findPublicById(gameId: string): Promise<PendingGame | null> {
@@ -84,59 +77,85 @@ export class RedisPendingGameRepository extends PendingGameRepository {
     return this.loadGames(ids);
   }
 
-  async save(game: PendingGame): Promise<void> {
+  async create(game: PendingGame): Promise<void> {
     const redis = this.redis.client();
     const gameKey = this.gameKey(game.id);
 
-    // todo: добавить проверку и обновление версии
-    // с помощью redis.watch
-    //
+    const existing = await redis.get(gameKey);
 
-
-    const stored = await this.findById(gameKey);
-    // Если игры нет — значит это первое сохранение
-    if (stored) {
-      if (stored.version !== game.version) {
-        throw new ConcurrencyException();
-      }
-      stored.version += 1;
+    if (existing) {
+      throw new ConflictException(
+        'Pending game already exists.',
+      );
     }
 
+    const dto = PendingGameMapper.toRedis(game);
 
+    const tx = redis.multi()
+
+    tx.set(gameKey, JSON.stringify(dto), 'EX', 60 * 300, );
+
+    tx.sadd(this.ownerKey(game.ownerId), game.id);
+
+    if (game.organizationId) {
+      tx.sadd(this.organizationKey(game.organizationId), game.id,);
+    }
+
+    if (game.isPublic()) {
+      tx.sadd(this.publicGamesKey(), game.id,);
+    }
+
+    if (game.isPvP()) {
+      tx.sadd(this.pVpGamesKey(), game.id,);
+    }
+
+    await tx.exec();
+  }
+
+  async update(game: PendingGame): Promise<void> {
+    const redis = this.redis.client();
+    const gameKey = this.gameKey(game.id);
 
     await redis.watch(gameKey);
 
     try {
+      const json = await redis.get(gameKey);
+
+      const stored = json ? PendingGameMapper.fromRedis(json) : null;
+
+      if (!stored) {
+        throw new NotFoundException(
+          'Pending game not found.',
+        );
+      }
+
+      if (
+        stored &&
+        stored.getVersion() !== game.getVersion()
+      ) {
+        throw new ConflictException('Pending game was modified by another request.');
+      }
+
+      const nextVersion = game.getVersion() + 1;
+
+      const dto = PendingGameMapper.toRedis(game, nextVersion);
+
       const tx = redis.multi()
 
-      tx.set(gameKey, JSON.stringify(game), 'EX', 60*300);
+      tx.set(gameKey, JSON.stringify(dto), 'EX', 60*300);
 
-      tx.sadd(this.ownerKey(game.ownerId), game.id);
+      const result = await tx.exec();
 
-      if (game.organizationId) {
-        tx.sadd(this.organizationKey(game.organizationId), game.id,);
+      if (result === null) {
+        throw new ConflictException(
+          'The game was modified by another request.',
+        );
       }
 
-      if (game.isPublic()) {
-        tx.sadd(this.publicGamesKey(), game.id,);
-      }
-
-      if (game.isPvP()) {
-        tx.sadd(this.pVpGamesKey(), game.id,);
-      }
-
-      await tx.exec();
-
-      // todo: всё таки нужно сохранить персистентность версии
-      // поэтому, несмотря на то, что в большинстве кейсов агрегат
-      // заканчивает свой жизненный цикл после метода save,
-      // всё равно нужно обновить его версию, на всякий случай.
-      // game.updateVersion(nextVersion);
-
+      game.commitVersion(nextVersion);
     } finally {
       await redis.unwatch();
     }
-
   }
 
   async remove(id: string): Promise<void> {

@@ -35,6 +35,7 @@ import { PendingGameController } from '@/modules/game/pending-game/pending-game.
     GameValidationService,
     CreatePendingGameUseCase,
     JoinGameUseCase,
+    PendingGameRepository,
   ],
 })
 export class GameModule {}

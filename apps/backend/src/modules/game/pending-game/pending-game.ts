@@ -45,7 +45,7 @@ export interface PendingGameSettings {
 }
 
 export class PendingGame {
-  readonly version: number;
+  private version: number;
   readonly id: string;
   readonly ownerId: string;
   readonly organizationId: string | undefined;
@@ -55,6 +55,7 @@ export class PendingGame {
   private readonly players: PendingGamePlayer[];
 
   constructor(
+    version: number,
     id: string,
     ownerId: string,
     organizationId: string | undefined,
@@ -72,6 +73,7 @@ export class PendingGame {
 
   static create(params: CreatePendingGameParams): PendingGame {
     return new PendingGame(
+      1,
       randomUUID(),
       params.ownerId,
       params.organizationId,
@@ -123,6 +125,10 @@ export class PendingGame {
     );
   }
 
+  getVersion(): number {
+    return this.version;
+  }
+
   getPlayers(): readonly PendingGamePlayer[] {
     return this.players;
   }
@@ -141,5 +147,10 @@ export class PendingGame {
   isPvP(): boolean {
     return this.settings.gamePvType === GamePvType.PVP;
   }
-
+  commitVersion(version: number): void {
+    if (version <= this.version) {
+      throw new Error('Version must be greater than current version.');
+    }
+    this.version = version;
+  }
 }
