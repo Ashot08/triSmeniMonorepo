@@ -3,6 +3,9 @@ import { GameVisibility } from '@/modules/game/enums/game-visibility.enum';
 import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
 import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 import { GameQuestionsType } from '@/modules/game/enums/game-questions-type.enum';
+import { GameNotAcceptingPlayersError } from '@/modules/game/pending-game/errors/game-not-accepting-players.error';
+import { PlayerAlreadyJoinedError } from '@/modules/game/pending-game/errors/player-already-joined.error';
+import { GameIsFullError } from '@/modules/game/pending-game/errors/game-is-full.error';
 
 // todo: решить потенциальную проблему concurrency
 // например, с помощью version
@@ -90,15 +93,15 @@ export class PendingGame {
 
   join(playerId: string): void {
     if (this.status !== PendingGameStatus.WAITING) {
-      throw new Error('Game is not accepting players');
+      throw new GameNotAcceptingPlayersError();
     }
 
     if (this.players.some(player => player.id === playerId)) {
-      throw new Error('Player already joined');
+      throw new PlayerAlreadyJoinedError();
     }
 
     if (this.players.length >= this.settings.playersCount) {
-      throw new Error('Game is full');
+      throw new GameIsFullError();
     }
 
     this.players.push({

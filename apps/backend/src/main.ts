@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { PendingGameExceptionFilter } from '@/common/http/filters/pending-game-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,10 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
+  );
+
+  app.useGlobalFilters(
+    new PendingGameExceptionFilter(),
   );
 
   const port = process.env.PORT || 3000;
