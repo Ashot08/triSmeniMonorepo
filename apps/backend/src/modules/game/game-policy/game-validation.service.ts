@@ -17,11 +17,12 @@ export class GameValidationService {
     this.validatePlayers(settings, policy);
     this.validatePvType(settings, policy);
     this.validateVisibility(settings, policy);
+    this.validateJoinType(settings, policy);
   }
 
   validateJoin(
     settings: PendingGameSettings,
-    policy: GameJoinTypePolicy,
+    policy: GameJoinTypePolicy | GameCreationPolicy,
   ): void {
     this.validateJoinType(settings, policy);
   }
@@ -50,7 +51,7 @@ export class GameValidationService {
 
   private validateJoinType(
     settings: PendingGameSettings,
-    policy: GameJoinTypePolicy,
+    policy: GameJoinTypePolicy | GameCreationPolicy,
   ) {
     if (!policy.allowedJoinTypes.includes(settings.joinType)) {
       throw new ForbiddenException(

@@ -2,11 +2,11 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GameValidationService } from '@/modules/game/game-policy/game-validation.service';
 import { GamePolicyService } from '@/modules/game/game-policy/game-policy.service';
 import { PendingGameRepository } from '@/modules/game/pending-game/pending-game.repository';
-import { JoinGameCommand } from '@/modules/game/application/interfaces/join-game-command.interface';
 import { PendingGameNotFoundError } from '@/modules/game/pending-game/errors/pending-game-not-found.error';
+import { AddUserToGameCommand } from '@/modules/game/application/interfaces/add-user-to-game-command.interface';
 
 @Injectable()
-export class JoinGameUseCase {
+export class AddUserToGameUseCase {
   constructor(
     private readonly gameValidationService: GameValidationService,
     private readonly gamePolicyService: GamePolicyService,
@@ -14,7 +14,7 @@ export class JoinGameUseCase {
   ) {
   }
 
-  async execute(command: JoinGameCommand) {
+  async execute(command: AddUserToGameCommand) {
     const game = await this.pendingGameRepository.findById(command.id);
 
     if (!game) {

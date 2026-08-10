@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Get, Body, Req} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
@@ -57,7 +57,7 @@ export class AuthController {
     return this.authService.logoutAll(id)
   }
 
-  @RequireGlobalRoles(RoleCode.PLAYER)
+  @RequireGlobalRoles(RoleCode.PLAYER, RoleCode.PLATFORM_ADMIN)
   @Get('profile')
   getProfile(@Req() req: JwtRequest) {
     return req.user;

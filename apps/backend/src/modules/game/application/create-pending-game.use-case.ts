@@ -20,8 +20,8 @@ export class CreatePendingGameUseCase {
   async execute(command: CreateGameCommand) {
     const gameSettings = {
       ...command.dto,
-      joinType: GameJoinType.JOINABLE,
-      gamePvType: GamePvType.PVB,
+      joinType: command.dto.joinType ?? GameJoinType.JOINABLE,
+      gamePvType: command.dto.gamePvType ?? GamePvType.PVB,
       visibility: command.dto.visibility ?? GameVisibility.VISIBLE,
       shiftsCount: command.dto.shiftsCount ?? defaultGameOptions.SHIFTS_COUNT,
       startingCoins: command.dto.startingCoins ?? defaultGameOptions.STARTING_COINS,

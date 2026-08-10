@@ -42,7 +42,6 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   allowedJoinTypes: [
     GameJoinType.JOINABLE,
     GameJoinType.JOIN_WITH_CODE,
-    GameJoinType.ONLY_ADD_BY_CREATOR,
   ],
 
   allowedVisibilities: [
@@ -88,8 +87,6 @@ export const ORGANIZATION_PLAYER_POLICY: GameCreationPolicy = {
 
   allowedJoinTypes: [
     GameJoinType.JOINABLE,
-    GameJoinType.JOIN_WITH_CODE,
-    GameJoinType.ONLY_ADD_BY_CREATOR,
   ],
 
   allowedVisibilities: [

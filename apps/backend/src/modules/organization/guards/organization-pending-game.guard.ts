@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PendingGameRepository } from '@/modules/game/pending-game/pending-game.repository';
+import { PendingGameNotFoundError } from '@/modules/game/pending-game/errors/pending-game-not-found.error';
 
 @Injectable()
 export class OrganizationPendingGameGuard implements CanActivate {
@@ -16,7 +17,7 @@ export class OrganizationPendingGameGuard implements CanActivate {
     );
 
     if (!game) {
-      throw new NotFoundException();
+      throw new PendingGameNotFoundError();
     }
 
     req.game = game;

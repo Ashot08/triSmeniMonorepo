@@ -4,6 +4,7 @@ import { GamePvType } from '@/modules/game/enums/game-pv-type.enum';
 
 export interface GameCreationPolicy {
   maxPlayers: number;
+  maxWorkersPerPlayer: number;
 
   canUseCustomQuestions: boolean;
   canBranding: boolean;
