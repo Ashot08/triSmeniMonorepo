@@ -15,6 +15,12 @@ interface GameCreationContext {
   organizationRoles?: OrganizationRoleCode[];
 }
 
+interface AddUserToGameContext {
+  user: JwtUser;
+  organizationId?: string;
+  organizationRoles?: OrganizationRoleCode[];
+}
+
 @Injectable()
 export class GamePolicyService {
   getCreateGamePolicy(context: GameCreationContext): GameCreationPolicy {
@@ -46,4 +52,20 @@ export class GamePolicyService {
   getJoinGamePolicy () {
     return PLAYER_POLICY;
   }
+
+  getAddUserToGamePolicy (context: AddUserToGameContext) {
+    if (context.user.roles.includes(RoleCode.PLATFORM_ADMIN)) {
+      return PLATFORM_ADMIN_POLICY;
+    }
+
+    if (context.organizationRoles?.includes(
+      OrganizationRoleCode.ORGANIZATION_ADMIN,
+    )
+    ) {
+      return ORGANIZATION_ADMIN_POLICY;
+    }
+
+    return SUBSCRIPTION_OWNER_POLICY;
+  }
+
 }

@@ -61,4 +61,27 @@ export class OrganizationMembershipService {
 
     return membership?.organizationRoles.map(r => r.code) ?? [];
   }
+
+  async isMember(
+    userId: string,
+    organizationId: string,
+  ): Promise<boolean> {
+
+    const membership =
+      await this.membershipRepository.findOne({
+        where: {
+          user: {
+            id: userId,
+          },
+          organization: {
+            id: organizationId,
+          },
+        },
+      });
+
+    if (!membership) {
+      return false;
+    }
+    return true;
+  }
 }

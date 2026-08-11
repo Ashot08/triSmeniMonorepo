@@ -5,6 +5,7 @@ import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 
 export const PLAYER_POLICY: GameCreationPolicy = {
   maxPlayers: 2,
+  maxWorkersPerPlayer: 6,
 
   canUseCustomQuestions: false,
   canBranding: false,
@@ -27,6 +28,7 @@ export const PLAYER_POLICY: GameCreationPolicy = {
 
 export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   maxPlayers: 8,
+  maxWorkersPerPlayer: 6,
 
   canUseCustomQuestions: false,
   canBranding: true,
@@ -52,6 +54,7 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
 
 export const ORGANIZATION_ADMIN_POLICY: GameCreationPolicy = {
   maxPlayers: 20,
+  maxWorkersPerPlayer: 6,
 
   canUseCustomQuestions: true,
   canBranding: true,
@@ -74,6 +77,7 @@ export const ORGANIZATION_ADMIN_POLICY: GameCreationPolicy = {
 
 export const ORGANIZATION_PLAYER_POLICY: GameCreationPolicy = {
   maxPlayers: 2,
+  maxWorkersPerPlayer: 6,
 
   canUseCustomQuestions: false,
   canBranding: false,
@@ -96,6 +100,7 @@ export const ORGANIZATION_PLAYER_POLICY: GameCreationPolicy = {
 
 export const PLATFORM_ADMIN_POLICY: GameCreationPolicy = {
   maxPlayers: 20,
+  maxWorkersPerPlayer: 6,
 
   canUseCustomQuestions: true,
   canBranding: true,

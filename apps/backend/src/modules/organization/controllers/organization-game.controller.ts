@@ -59,4 +59,6 @@ export class OrganizationGameController {
   ) {
       return this.joinGameUseCase.execute({id: gameId, dto, user});
   }
+
+
 }

@@ -6,6 +6,7 @@ import { GameCreationPolicy } from './interfaces/game-creation-policy.interface'
 import { PendingGameSettings } from '@/modules/game/pending-game/pending-game';
 import { GameJoinTypePolicy } from '@/modules/game/game-policy/interfaces/join-game-policy.interface';
 import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
+import { AddUserToGamePolicy } from '@/modules/game/game-policy/interfaces/add-user-to-game-policy.interface';
 
 @Injectable()
 export class GameValidationService {
@@ -23,6 +24,13 @@ export class GameValidationService {
   validateJoin(
     settings: PendingGameSettings,
     policy: GameJoinTypePolicy | GameCreationPolicy,
+  ): void {
+    this.validateJoinType(settings, policy);
+  }
+
+  validateAdd(
+    settings: PendingGameSettings,
+    policy: AddUserToGamePolicy,
   ): void {
     this.validateJoinType(settings, policy);
   }

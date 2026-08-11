@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { PendingGameRepository } from '@/modules/game/pending-game/pending-game.repository';
 import { PendingGameNotFoundError } from '@/modules/game/pending-game/errors/pending-game-not-found.error';
 

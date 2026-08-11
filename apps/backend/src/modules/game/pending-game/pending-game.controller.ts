@@ -1,16 +1,20 @@
-import { Controller, Get, Post, Body, Param, UseGuards, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 import { CreatePendingGameUseCase } from '../application/create-pending-game.use-case';
 import { JoinGameUseCase } from '../application/join-game.use-case';
 import { PublicPendingGameGuard } from './guards/public-pending-game.guard';
+import { JoinGameDto } from '@/modules/game/dto/join-game.dto';
+import { AddUserToGameDto } from '@/modules/game/dto/add-user-to-game.dto';
+import { AddUserToGameUseCase } from '@/modules/game/application/add-user-to-game.use-case';
 
 @Controller('pending-game')
 export class PendingGameController {
   constructor(
     private readonly createPendingGameUseCase: CreatePendingGameUseCase,
     private readonly joinGameUseCase: JoinGameUseCase,
+    private readonly addUserToGameUseCase: AddUserToGameUseCase,
   ) {}
 
   @Post()
@@ -27,11 +31,23 @@ export class PendingGameController {
   join(
     @Param('id') id: string,
 
-    @Body() dto: CreateGameDto,
+    @Body() dto: JoinGameDto,
 
     @CurrentUser() user: JwtUser
   ) {
     return this.joinGameUseCase.execute({id, dto, user});
+  }
+
+  @UseGuards(PublicPendingGameGuard)
+  @Post('/:id/add')
+  addUserToGame(
+    @Param('id') id: string,
+
+    @Body() dto: AddUserToGameDto,
+
+    @CurrentUser() user: JwtUser
+  ) {
+    return this.addUserToGameUseCase.execute({id, dto, user});
   }
 
   @Get('/:id')
