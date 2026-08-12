@@ -11,6 +11,9 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Throttle } from '@nestjs/throttler';
 import { RequireGlobalRoles } from './decorators/require-global-roles.decorator';
 import { RoleCode } from '@/common/enums/role.enum';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { LoginDto } from '@/modules/auth/dto/login.dto';
+import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +25,21 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiOperation({
+    summary: 'Authenticate user',
+  })
+  @ApiBody({
+    type: LoginDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully authenticated',
+    type: LoginResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials',
+  })
   login(@Req() req: LoginRequest) {
     // todo: записывать рефреш токен в http only cookies
     return this.authService.login(req.user);

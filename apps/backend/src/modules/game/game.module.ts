@@ -11,11 +11,14 @@ import { RedisModule } from '@/redis/redis.module';
 import { CreatePendingGameUseCase } from '@/modules/game/application/create-pending-game.use-case';
 import { JoinGameUseCase } from '@/modules/game/application/join-game.use-case';
 import { PendingGameController } from '@/modules/game/pending-game/pending-game.controller';
+import { AddUserToGameUseCase } from '@/modules/game/application/add-user-to-game.use-case';
+import { UserModule } from '@/modules/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Game]),
-    RedisModule
+    RedisModule,
+    UserModule,
   ],
   controllers: [GameController, PendingGameController],
   providers: [
@@ -24,6 +27,7 @@ import { PendingGameController } from '@/modules/game/pending-game/pending-game.
     GameValidationService,
     CreatePendingGameUseCase,
     JoinGameUseCase,
+    AddUserToGameUseCase,
     {
       provide: PendingGameRepository,
       useClass: RedisPendingGameRepository

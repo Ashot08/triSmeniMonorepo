@@ -19,14 +19,14 @@ export class AddUserToGameUseCase {
 
   async execute(command: AddUserToGameCommand) {
     const game = await this.pendingGameRepository.findById(command.id);
-    const user = await this.userService.findById(command.userId);
+    const user = await this.userService.findById(command.dto.userId);
 
     if (!game) {
       throw new PendingGameNotFoundError();
     }
 
     if (!user) {
-      throw new UserNotFoundError(command.userId);
+      throw new UserNotFoundError(command.dto.userId);
     }
 
     const policy = this.gamePolicyService.getAddUserToGamePolicy(
