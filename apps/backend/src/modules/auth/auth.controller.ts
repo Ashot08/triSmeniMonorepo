@@ -11,10 +11,11 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Throttle } from '@nestjs/throttler';
 import { RequireGlobalRoles } from './decorators/require-global-roles.decorator';
 import { RoleCode } from '@/common/enums/role.enum';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '@/modules/auth/dto/login.dto';
 import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(

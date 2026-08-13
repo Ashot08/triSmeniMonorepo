@@ -11,8 +11,10 @@ export class PublicPendingGameGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
 
+
+
     const game = await this.pendingGameRepository.findPublicById(
-      req.params.gameId,
+      req.params.id,
     );
 
     if (!game) {

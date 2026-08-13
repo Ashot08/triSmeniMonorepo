@@ -10,13 +10,20 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('Game API')
-      .setDescription('API for game service')
+      .setTitle('Tri Smeni Game API')
+      .setDescription('API for backend')
       .setVersion('1.0')
       .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
+
+    document.tags = [
+      { name: 'Auth', description: 'Authentication, password reset, user data etc' },
+      { name: 'PendingGame', description: 'Pending Games create, join, add, read etc' },
+      { name: 'Organizations', description: 'Organizations' },
+      { name: 'Games', description: 'Games' },
+    ];
 
     SwaggerModule.setup('api/docs', app, document);
   }

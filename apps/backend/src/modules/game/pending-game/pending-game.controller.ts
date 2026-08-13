@@ -8,7 +8,9 @@ import { PublicPendingGameGuard } from './guards/public-pending-game.guard';
 import { JoinGameDto } from '@/modules/game/dto/join-game.dto';
 import { AddUserToGameDto } from '@/modules/game/dto/add-user-to-game.dto';
 import { AddUserToGameUseCase } from '@/modules/game/application/add-user-to-game.use-case';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('pending-game')
 export class PendingGameController {
   constructor(
@@ -18,6 +20,21 @@ export class PendingGameController {
   ) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Create pending game',
+  })
+  @ApiBody({
+    type: CreateGameDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Game created successfully.',
+    // type: CreatePendingGameResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Create game error',
+  })
   create(
     @Body() dto: CreateGameDto,
 
@@ -28,6 +45,31 @@ export class PendingGameController {
 
   @UseGuards(PublicPendingGameGuard)
   @Post('/:id/join')
+  @ApiOperation({
+    summary: 'Join to pending game as simple player',
+  })
+  @ApiBody({
+    type: JoinGameDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Game UUID',
+    example: '64f1a2b3c4d5e6f7a8b9c0d1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Join game success.',
+    // type: CreatePendingGameResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pending game not found',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Player already joined',
+  })
   join(
     @Param('id') id: string,
 
