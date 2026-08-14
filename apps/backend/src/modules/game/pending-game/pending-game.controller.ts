@@ -5,10 +5,13 @@ import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 import { CreatePendingGameUseCase } from '../application/create-pending-game.use-case';
 import { JoinGameUseCase } from '../application/join-game.use-case';
 import { PublicPendingGameGuard } from './guards/public-pending-game.guard';
-import { JoinGameDto } from '@/modules/game/dto/join-game.dto';
-import { AddUserToGameDto } from '@/modules/game/dto/add-user-to-game.dto';
-import { AddUserToGameUseCase } from '@/modules/game/application/add-user-to-game.use-case';
+import { JoinGameDto } from '../dto/join-game.dto';
+import { AddUserToGameDto } from '../dto/add-user-to-game.dto';
+import { AddUserToGameUseCase } from '../application/add-user-to-game.use-case';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { PendingGameService } from './pending-game.service';
+import { RequireGlobalRoles } from '@/modules/auth/decorators/require-global-roles.decorator';
+import { RoleCode } from '@/common/enums/role.enum';
 
 @ApiBearerAuth()
 @Controller('pending-game')
@@ -17,6 +20,7 @@ export class PendingGameController {
     private readonly createPendingGameUseCase: CreatePendingGameUseCase,
     private readonly joinGameUseCase: JoinGameUseCase,
     private readonly addUserToGameUseCase: AddUserToGameUseCase,
+    private readonly pendingGameService: PendingGameService,
   ) {}
 
   @Post()
@@ -60,7 +64,7 @@ export class PendingGameController {
   @ApiResponse({
     status: 200,
     description: 'Join game success.',
-    // type: CreatePendingGameResponseDto,
+    // type: JoinPendingGameResponseDto,
   })
   @ApiResponse({
     status: 404,
@@ -82,6 +86,31 @@ export class PendingGameController {
 
   @UseGuards(PublicPendingGameGuard)
   @Post('/:id/add')
+  @ApiOperation({
+    summary: 'Add player to pending game (by another user)',
+  })
+  @ApiBody({
+    type: AddUserToGameDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Game UUID',
+    example: '64f1a2b3c4d5e6f7a8b9c0d1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Add to game success.',
+    // type: AddPendingGameResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pending game not found',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Player already joined',
+  })
   addUserToGame(
     @Param('id') id: string,
 
@@ -92,15 +121,58 @@ export class PendingGameController {
     return this.addUserToGameUseCase.execute({id, dto, user});
   }
 
+
+  // todo вынести в use-case и сделать единый эндпоинт и для админа и для юзера,
+  //  а юз кейс будет определять что выдать в зависимости от policy
+  @RequireGlobalRoles(RoleCode.PLATFORM_ADMIN)
   @Get('/:id')
+  @ApiOperation({
+    summary: 'Get pending game by UUID (only platform admin)',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Game UUID',
+    example: '64f1a2b3c4d5e6f7a8b9c0d1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Get pending game success.',
+    // type: AddPendingGameResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pending game not found',
+  })
   findOne(
     @Param('id') id: string,
-    @CurrentUser() user: JwtUser,
   ) {
-    return this.joinGameUseCase.execute({
-      id,
-      dto: {},
-      user,
-    })
+    return this.pendingGameService.findOne(id);
+  }
+
+
+  @Get('/:id')
+  @ApiOperation({
+    summary: 'Get pending game by UUID (public access)',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Game UUID',
+    example: '64f1a2b3c4d5e6f7a8b9c0d1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Get pending game success.',
+    // type: AddPendingGameResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pending game not found',
+  })
+  findOnePublic(
+    @Param('id') id: string,
+  ) {
+    return this.pendingGameService.findOnePublic(id);
   }
 }

@@ -13,6 +13,7 @@ import { JoinGameUseCase } from '@/modules/game/application/join-game.use-case';
 import { PendingGameController } from '@/modules/game/pending-game/pending-game.controller';
 import { AddUserToGameUseCase } from '@/modules/game/application/add-user-to-game.use-case';
 import { UserModule } from '@/modules/user/user.module';
+import { PendingGameService } from '@/modules/game/pending-game/pending-game.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from '@/modules/user/user.module';
     GameService,
     GamePolicyService,
     GameValidationService,
+    PendingGameService,
     CreatePendingGameUseCase,
     JoinGameUseCase,
     AddUserToGameUseCase,

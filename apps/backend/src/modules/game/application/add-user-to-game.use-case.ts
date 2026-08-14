@@ -38,7 +38,7 @@ export class AddUserToGameUseCase {
     );
     this.gameValidationService.validateAdd(game.settings, policy);
 
-    game.join(command.user.id);
+    game.join(command.dto.userId);
 
     return this.pendingGameRepository.update(game);
   }
