@@ -151,6 +151,8 @@ export class PendingGameController {
   }
 
 
+  // todo вынести в use-case и сделать единый эндпоинт и для админа и для юзера,
+  //  а юз кейс будет определять что выдать в зависимости от policy
   @Get('/:id')
   @ApiOperation({
     summary: 'Get pending game by UUID (public access)',
