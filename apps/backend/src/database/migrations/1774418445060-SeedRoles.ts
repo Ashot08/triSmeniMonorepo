@@ -1,9 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SeedRoles1774418445060 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             INSERT INTO "roles" ("code", "name")
             VALUES ('player', 'Игрок'),
                    ('subscription_owner', 'Владелец подписки'),
@@ -12,10 +11,10 @@ export class SeedRoles1774418445060 implements MigrationInterface {
                    ('moderator', 'Модератор'),
                    ('content_manager', 'Контент-менеджер')
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DELETE
             FROM "roles"
             WHERE "code" IN (
@@ -27,6 +26,5 @@ export class SeedRoles1774418445060 implements MigrationInterface {
                              'content_manager'
                 );
         `);
-    }
-
+  }
 }

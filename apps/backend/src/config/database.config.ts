@@ -15,14 +15,14 @@ export const databaseConfig: TypeOrmModuleAsyncOptions = {
       database: config.get(EnvVariable.POSTGRES_DB),
       logging: config.get(EnvVariable.DB_LOGGING) === 'true',
       autoLoadEntities: true,
-      synchronize: false,
-      migrations: [
-        isProd
-          ? 'dist/database/migrations/*{.js}'
-          : 'src/database/migrations/*{.ts}',
-      ],
-      migrationsTableName: 'typeorm_migrations',
-      migrationsRun: false,
-    }
+      synchronize: true, // в проде установить false
+      // migrations: [
+      //   isProd
+      //     ? 'dist/database/migrations/*{.js}'
+      //     : 'src/database/migrations/*{.ts}',
+      // ],
+      // migrationsTableName: 'typeorm_migrations',
+      // migrationsRun: false,
+    };
   },
 };
