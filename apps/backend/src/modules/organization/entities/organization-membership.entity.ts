@@ -6,7 +6,9 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn, ManyToMany, JoinTable,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { User } from '@/modules/user/entities/user.entity';
 import { Organization } from './organization.entity';

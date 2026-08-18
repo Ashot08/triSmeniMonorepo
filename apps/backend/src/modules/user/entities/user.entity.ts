@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index, ManyToMany, JoinTable, OneToMany,
+  Index,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Role } from '@/modules/role/entities/role.entity';
 import { OrganizationMembership } from '@/modules/organization/entities/organization-membership.entity';
@@ -30,7 +33,7 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true, unique: true })
   email!: string | null;
 
-  @Column({ type: 'text'})
+  @Column({ type: 'text' })
   password!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -92,7 +95,10 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true })
   telegramId!: string | null;
 
-  @OneToMany(() => OrganizationMembership, (membership) => membership.department)
+  @OneToMany(
+    () => OrganizationMembership,
+    (membership) => membership.department,
+  )
   memberships!: OrganizationMembership[];
 
   @ManyToMany(() => Role)

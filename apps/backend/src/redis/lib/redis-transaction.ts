@@ -1,15 +1,9 @@
 import { ChainableCommander } from 'ioredis';
 
 export class RedisTransaction {
-  constructor(
-    private readonly tx: ChainableCommander,
-  ) {}
+  constructor(private readonly tx: ChainableCommander) {}
 
-  set(
-    key: string,
-    value: string,
-    ttlSeconds?: number,
-  ): this {
+  set(key: string, value: string, ttlSeconds?: number): this {
     if (ttlSeconds) {
       this.tx.set(key, value, 'EX', ttlSeconds);
     } else {
@@ -19,25 +13,17 @@ export class RedisTransaction {
     return this;
   }
 
-  sAdd(
-    key: string,
-    ...members: string[]
-  ): this {
+  sAdd(key: string, ...members: string[]): this {
     this.tx.sadd(key, ...members);
     return this;
   }
 
-  sRem(
-    key: string,
-    ...members: string[]
-  ): this {
+  sRem(key: string, ...members: string[]): this {
     this.tx.srem(key, ...members);
     return this;
   }
 
-  delete(
-    key: string,
-  ): this {
+  delete(key: string): this {
     this.tx.del(key);
     return this;
   }

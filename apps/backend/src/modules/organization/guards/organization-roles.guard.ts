@@ -20,25 +20,16 @@ export class OrganizationRolesGuard implements CanActivate {
     private readonly membershipService: OrganizationMembershipService,
   ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
-    const requiredRoles =
-      this.reflector.getAllAndOverride<OrganizationRoleCode[]>(
-        ORGANIZATION_ROLES_KEY,
-        [
-          context.getHandler(),
-          context.getClass(),
-        ],
-      );
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredRoles = this.reflector.getAllAndOverride<
+      OrganizationRoleCode[]
+    >(ORGANIZATION_ROLES_KEY, [context.getHandler(), context.getClass()]);
 
-    const request =
-      context.switchToHttp().getRequest<JwtRequest>();
+    const request = context.switchToHttp().getRequest<JwtRequest>();
 
     const { id: userId } = request.user;
 
-    const organizationId =
-      request.params.organizationId;
+    const organizationId = request.params.organizationId;
 
     if (!organizationId) {
       throw new BadRequestException('Organization id is required');
@@ -58,9 +49,7 @@ export class OrganizationRolesGuard implements CanActivate {
     }
 
     if (requiredRoles?.length) {
-      const hasRole = requiredRoles.some(role =>
-        roles.includes(role),
-      );
+      const hasRole = requiredRoles.some((role) => roles.includes(role));
 
       if (!hasRole) {
         throw new ForbiddenException();

@@ -153,7 +153,7 @@ export class Question {
 
 // ✅ TypeScript интерфейс для интерактивного испытания
 export interface InteractiveChallenge {
-  type: 'MAP_NAVIGATION' | 'FIRE_EXTINGUISHING' | 'PPE_SELECTION' | string;
+  type: 'MAP_NAVIGATION' | 'FIRE_EXTINGUISHING' | 'PPE_SELECTION';
   title: string;
   description?: string;
   timeLimit: number; // секунды

@@ -5,22 +5,15 @@ import { PendingGameNotFoundError } from '@/modules/game/pending-game/errors/pen
 @Injectable()
 export class PendingGameService {
   constructor(
-    @Inject(PendingGameRepository) private readonly pendingGameRepository: PendingGameRepository,
+    @Inject(PendingGameRepository)
+    private readonly pendingGameRepository: PendingGameRepository,
   ) {}
   findAll() {
     return `This action returns all game`;
   }
 
-  findOne(id: string) {
-    const game = this.pendingGameRepository.findById(id);
-    if (!game) {
-      throw new PendingGameNotFoundError();
-    }
-    return game;
-  }
-
-  findOnePublic(id: string) {
-    const game = this.pendingGameRepository.findPublicById(id);
+  async findOne(id: string) {
+    const game = await this.pendingGameRepository.findById(id);
     if (!game) {
       throw new PendingGameNotFoundError();
     }

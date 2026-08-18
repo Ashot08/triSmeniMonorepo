@@ -11,39 +11,26 @@ import { RoleCode } from '@/common/enums/role.enum';
 
 @Injectable()
 export class GlobalRolesGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-  ) {}
+  constructor(private readonly reflector: Reflector) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean {
-    const requiredRoles =
-      this.reflector.getAllAndOverride<RoleCode[]>(
-        GLOBAL_ROLES_KEY,
-        [
-          context.getHandler(),
-          context.getClass(),
-        ],
-      );
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<RoleCode[]>(
+      GLOBAL_ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     if (!requiredRoles?.length) {
       return true;
     }
 
-    const request =
-      context.switchToHttp().getRequest<JwtRequest>();
+    const request = context.switchToHttp().getRequest<JwtRequest>();
 
     const user = request.user;
 
-    const hasRole = requiredRoles.some(role =>
-      user.roles.includes(role),
-    );
+    const hasRole = requiredRoles.some((role) => user.roles.includes(role));
 
     if (!hasRole) {
-      throw new ForbiddenException(
-        'Insufficient permissions',
-      );
+      throw new ForbiddenException('Insufficient permissions');
     }
 
     return true;

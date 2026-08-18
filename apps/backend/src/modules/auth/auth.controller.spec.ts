@@ -11,8 +11,7 @@ describe('AuthController', () => {
     resetPassword: jest.fn(),
   };
 
-  const authServiceMock = {
-  };
+  const authServiceMock = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,7 +25,7 @@ describe('AuthController', () => {
           provide: AuthService,
           useValue: authServiceMock,
         },
-      ]
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

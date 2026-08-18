@@ -18,7 +18,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['../../.env', '.env']
+      envFilePath: ['../../.env', '.env'],
     }),
     ThrottlerModule.forRoot([
       {
@@ -44,8 +44,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

@@ -14,14 +14,16 @@ export class GameService {
   ) {}
 
   async create({
-                 dto,
-                 organizationId,
-                 createdById,
-               }: CreateGameOptions): Promise<Game> {
+    dto,
+    organizationId,
+    createdById,
+  }: CreateGameOptions): Promise<Game> {
     const game = this.gameRepository.create({
       ...dto,
-      organization: organizationId ? ({ id: organizationId } as Organization) : undefined,
-      createdBy: {id: createdById} as User,
+      organization: organizationId
+        ? ({ id: organizationId } as Organization)
+        : undefined,
+      createdBy: { id: createdById } as User,
     });
 
     return this.gameRepository.save(game);

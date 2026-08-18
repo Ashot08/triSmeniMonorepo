@@ -12,10 +12,10 @@ export class AddUserToGameUseCase {
   constructor(
     private readonly gameValidationService: GameValidationService,
     private readonly gamePolicyService: GamePolicyService,
-    @Inject(PendingGameRepository) private readonly pendingGameRepository: PendingGameRepository,
+    @Inject(PendingGameRepository)
+    private readonly pendingGameRepository: PendingGameRepository,
     private userService: UserService,
-  ) {
-  }
+  ) {}
 
   async execute(command: AddUserToGameCommand) {
     const game = await this.pendingGameRepository.findById(command.id);
@@ -29,13 +29,11 @@ export class AddUserToGameUseCase {
       throw new UserNotFoundError(command.dto.userId);
     }
 
-    const policy = this.gamePolicyService.getAddUserToGamePolicy(
-      {
-        user: command.user,
-        organizationId: command.organizationId,
-        organizationRoles: command.organizationRoles,
-      }
-    );
+    const policy = this.gamePolicyService.getAddUserToGamePolicy({
+      user: command.user,
+      organizationId: command.organizationId,
+      organizationRoles: command.organizationRoles,
+    });
     this.gameValidationService.validateAdd(game.settings, policy);
 
     game.join(command.dto.userId);

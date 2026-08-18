@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
@@ -7,17 +15,15 @@ import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 
 @Controller('game')
 export class GameController {
-  constructor(
-    private readonly gameService: GameService,
-  ) {}
+  constructor(private readonly gameService: GameService) {}
 
   @Post()
   create(
     @Body() dto: CreateGameDto,
 
-    @CurrentUser() user: JwtUser
+    @CurrentUser() user: JwtUser,
   ) {
-    return this.gameService.create({dto, createdById: user.id});
+    return this.gameService.create({ dto, createdById: user.id });
   }
 
   @Get()

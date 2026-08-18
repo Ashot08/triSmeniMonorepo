@@ -19,27 +19,20 @@ export class AuthService {
     private jwtConfig: JwtConfigService,
   ) {}
 
-  async validateUser(
-    login: string,
-    pass: string,
-  ): Promise<LoginUser | null> {
-
+  async validateUser(login: string, pass: string): Promise<LoginUser | null> {
     const user = await this.userService.findOne(login);
 
     if (!user) {
       return null;
     }
 
-    const isValid = await bcrypt.compare(
-        pass,
-        user.password,
-    );
+    const isValid = await bcrypt.compare(pass, user.password);
 
     if (!isValid) {
       return null;
     }
 
-    return this.toLoginUser(user)
+    return this.toLoginUser(user);
   }
 
   private async generateTokens(payload: JwtPayload) {
@@ -79,7 +72,6 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-
     const user = await this.userService.create(dto);
 
     return await this.login(this.toLoginUser(user));
@@ -89,43 +81,33 @@ export class AuthService {
     let payload: JwtPayload;
 
     try {
-      payload = await this.jwtService.verifyAsync(
-        refreshToken,
-        {
-          secret: this.jwtConfig.jwtRefreshSecret,
-        },
-      );
+      payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.jwtConfig.jwtRefreshSecret,
+      });
     } catch {
-      throw new UnauthorizedException(
-        'Invalid refresh token',
-      );
+      throw new UnauthorizedException('Invalid refresh token');
     }
 
     if (!payload.sid || !payload.sub) {
-      throw new UnauthorizedException(
-        'Invalid session',
-      );
+      throw new UnauthorizedException('Invalid session');
     }
 
     const isValid = await this.sessionService.validateRefreshToken(
       payload.sub,
       payload.sid,
-      refreshToken
+      refreshToken,
     );
 
     if (!isValid) {
-      throw new UnauthorizedException(
-        'Refresh token revoked',
-      );
+      throw new UnauthorizedException('Refresh token revoked');
     }
 
-    const newTokens =
-      await this.generateTokens({
-        login: payload.login,
-        sub: payload.sub,
-        sid: payload.sid,
-        roles: payload.roles,
-      });
+    const newTokens = await this.generateTokens({
+      login: payload.login,
+      sub: payload.sub,
+      sid: payload.sid,
+      roles: payload.roles,
+    });
 
     await this.sessionService.updateRefreshHash(
       payload.sid,
@@ -135,20 +117,12 @@ export class AuthService {
     return newTokens;
   }
 
-  async logout(
-    userId: string,
-    sessionId: string,
-  ): Promise<void> {
-    await this.sessionService.deleteSession(
-      userId,
-      sessionId,
-    );
+  async logout(userId: string, sessionId: string): Promise<void> {
+    await this.sessionService.deleteSession(userId, sessionId);
   }
 
   async logoutAll(userId: string): Promise<void> {
-    await this.sessionService.deleteAllUserSessions(
-      userId,
-    );
+    await this.sessionService.deleteAllUserSessions(userId);
   }
 
   private toLoginUser(user: User): LoginUser {
@@ -156,7 +130,7 @@ export class AuthService {
       id: user.id,
       username: user.username,
       email: user.email,
-      roles: user.roles.map(role => role.code),
+      roles: user.roles.map((role) => role.code),
     };
   }
 }

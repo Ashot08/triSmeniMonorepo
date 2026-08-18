@@ -11,12 +11,15 @@ import { OrganizationGameController } from './controllers/organization-game.cont
 import { OrganizationMembershipService } from '@/modules/organization/organization-membership.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Organization,
-    OrganizationDepartment,
-    OrganizationMembership,
-    OrganizationRole
-  ]), GameModule],
+  imports: [
+    TypeOrmModule.forFeature([
+      Organization,
+      OrganizationDepartment,
+      OrganizationMembership,
+      OrganizationRole,
+    ]),
+    GameModule,
+  ],
   controllers: [OrganizationController, OrganizationGameController],
   providers: [OrganizationService, OrganizationMembershipService],
 })

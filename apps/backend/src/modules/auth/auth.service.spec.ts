@@ -8,15 +8,11 @@ import { UserService } from '@/modules/user/user.service';
 describe('AuthService', () => {
   let service: AuthService;
 
-  const JwtServiceMock = {
-  };
-  const SessionServiceMock = {
-  };
-  const JwtConfigServiceMock = {
-  };
+  const JwtServiceMock = {};
+  const SessionServiceMock = {};
+  const JwtConfigServiceMock = {};
 
-  const UserServiceMock = {
-  };
+  const UserServiceMock = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

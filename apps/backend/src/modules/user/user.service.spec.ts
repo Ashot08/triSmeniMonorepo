@@ -15,7 +15,7 @@ describe('UserService', () => {
     delete: jest.fn(),
   };
 
-  const roleServiceMock = {}
+  const roleServiceMock = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,7 +25,7 @@ describe('UserService', () => {
           provide: getRepositoryToken(User),
           useValue: userRepositoryMock,
         },
-        {provide: RoleService, useValue: roleServiceMock},
+        { provide: RoleService, useValue: roleServiceMock },
       ],
     }).compile();
 

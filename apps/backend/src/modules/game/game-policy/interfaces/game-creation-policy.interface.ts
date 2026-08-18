@@ -11,7 +11,6 @@ export interface GameCreationPolicy {
   canCreateTournament: boolean;
   canInviteGuests: boolean;
 
-
   allowedGamePvTypes: GamePvType[];
   allowedVisibilities: GameVisibility[];
   allowedJoinTypes: GameJoinType[];

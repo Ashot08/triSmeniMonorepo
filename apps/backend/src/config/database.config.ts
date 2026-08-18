@@ -23,6 +23,6 @@ export const databaseConfig: TypeOrmModuleAsyncOptions = {
       // ],
       // migrationsTableName: 'typeorm_migrations',
       // migrationsRun: false,
-    }
+    };
   },
 };

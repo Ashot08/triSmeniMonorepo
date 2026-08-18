@@ -8,7 +8,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class RoleService {
-  constructor(@InjectRepository(Role) private readonly roleRepository: Repository<Role>) {}
+  constructor(
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+  ) {}
 
   create(createRoleDto: CreateRoleDto) {
     return 'This action adds a new role';

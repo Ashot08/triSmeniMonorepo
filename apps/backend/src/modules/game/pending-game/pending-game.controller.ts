@@ -8,7 +8,13 @@ import { PublicPendingGameGuard } from './guards/public-pending-game.guard';
 import { JoinGameDto } from '../dto/join-game.dto';
 import { AddUserToGameDto } from '../dto/add-user-to-game.dto';
 import { AddUserToGameUseCase } from '../application/add-user-to-game.use-case';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { PendingGameService } from './pending-game.service';
 import { RequireGlobalRoles } from '@/modules/auth/decorators/require-global-roles.decorator';
 import { RoleCode } from '@/common/enums/role.enum';
@@ -42,9 +48,9 @@ export class PendingGameController {
   create(
     @Body() dto: CreateGameDto,
 
-    @CurrentUser() user: JwtUser
+    @CurrentUser() user: JwtUser,
   ) {
-    return this.createPendingGameUseCase.execute({dto, user});
+    return this.createPendingGameUseCase.execute({ dto, user });
   }
 
   @UseGuards(PublicPendingGameGuard)
@@ -79,9 +85,9 @@ export class PendingGameController {
 
     @Body() dto: JoinGameDto,
 
-    @CurrentUser() user: JwtUser
+    @CurrentUser() user: JwtUser,
   ) {
-    return this.joinGameUseCase.execute({id, dto, user});
+    return this.joinGameUseCase.execute({ id, dto, user });
   }
 
   @UseGuards(PublicPendingGameGuard)
@@ -116,11 +122,10 @@ export class PendingGameController {
 
     @Body() dto: AddUserToGameDto,
 
-    @CurrentUser() user: JwtUser
+    @CurrentUser() user: JwtUser,
   ) {
-    return this.addUserToGameUseCase.execute({id, dto, user});
+    return this.addUserToGameUseCase.execute({ id, dto, user });
   }
-
 
   // todo вынести в use-case и сделать единый эндпоинт и для админа и для юзера,
   //  а юз кейс будет определять что выдать в зависимости от policy
@@ -144,37 +149,7 @@ export class PendingGameController {
     status: 404,
     description: 'Pending game not found',
   })
-  findOne(
-    @Param('id') id: string,
-  ) {
+  findOne(@Param('id') id: string) {
     return this.pendingGameService.findOne(id);
-  }
-
-
-  // todo вынести в use-case и сделать единый эндпоинт и для админа и для юзера,
-  //  а юз кейс будет определять что выдать в зависимости от policy
-  @Get('/:id')
-  @ApiOperation({
-    summary: 'Get pending game by UUID (public access)',
-  })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'Game UUID',
-    example: '64f1a2b3c4d5e6f7a8b9c0d1',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Get pending game success.',
-    // type: AddPendingGameResponseDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Pending game not found',
-  })
-  findOnePublic(
-    @Param('id') id: string,
-  ) {
-    return this.pendingGameService.findOnePublic(id);
   }
 }

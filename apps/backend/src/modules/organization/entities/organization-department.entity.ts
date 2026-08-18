@@ -36,7 +36,10 @@ export class OrganizationDepartment {
   @JoinColumn({ name: 'organization_id' })
   organization!: Organization;
 
-  @OneToMany(() => OrganizationMembership, (membership) => membership.department)
+  @OneToMany(
+    () => OrganizationMembership,
+    (membership) => membership.department,
+  )
   memberships!: OrganizationMembership[];
 
   @Column({ type: 'integer', default: 0 })

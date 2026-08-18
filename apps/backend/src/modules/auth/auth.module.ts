@@ -23,12 +23,15 @@ import { PasswordResetService } from '@/modules/auth/password.reset.service';
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>(EnvVariable.JWT_ACCESS_SECRET),
         signOptions: {
-          expiresIn: config.getOrThrow<StringValue>(EnvVariable.JWT_ACCESS_EXPIRES_IN),
+          expiresIn: config.getOrThrow<StringValue>(
+            EnvVariable.JWT_ACCESS_EXPIRES_IN,
+          ),
         },
       }),
     }),
   ],
-  providers: [AuthService,
+  providers: [
+    AuthService,
     LocalStrategy,
     JwtStrategy,
     RedisService,

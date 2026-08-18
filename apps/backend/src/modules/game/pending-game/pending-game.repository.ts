@@ -1,6 +1,6 @@
 import { PendingGame } from './pending-game';
 
-export abstract class  PendingGameRepository {
+export abstract class PendingGameRepository {
   abstract findById(id: string): Promise<PendingGame | null>;
 
   abstract findPublicById(gameId: string): Promise<PendingGame | null>;

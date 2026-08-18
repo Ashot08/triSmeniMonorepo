@@ -16,11 +16,7 @@ import { UserModule } from '@/modules/user/user.module';
 import { PendingGameService } from '@/modules/game/pending-game/pending-game.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Game]),
-    RedisModule,
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Game]), RedisModule, UserModule],
   controllers: [GameController, PendingGameController],
   providers: [
     GameService,
@@ -32,8 +28,8 @@ import { PendingGameService } from '@/modules/game/pending-game/pending-game.ser
     AddUserToGameUseCase,
     {
       provide: PendingGameRepository,
-      useClass: RedisPendingGameRepository
-    }
+      useClass: RedisPendingGameRepository,
+    },
   ],
   exports: [
     GameService,

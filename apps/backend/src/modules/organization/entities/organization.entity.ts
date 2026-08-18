@@ -5,13 +5,19 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  Index, JoinColumn, ManyToOne,
+  Index,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { OrganizationMembership } from './organization-membership.entity';
 import { OrganizationDepartment } from './organization-department.entity';
 import { Game } from '@/modules/game/entities/game.entity';
 import { Tournament } from '@/modules/tournament/entities/tournament.entity';
-import { OrganizationPlan, OrganizationStatus, OrganizationType } from '@/common/enums/organization.enum';
+import {
+  OrganizationPlan,
+  OrganizationStatus,
+  OrganizationType,
+} from '@/common/enums/organization.enum';
 import { Question } from '@/modules/question/entities/question.entity';
 import { User } from '@/modules/user/entities/user.entity';
 
@@ -79,19 +85,22 @@ export class Organization {
   @Column({ type: 'integer', default: 100 })
   maxMembers!: number;
 
-  @OneToMany(() => OrganizationMembership, (membership) => membership.organization)
+  @OneToMany(
+    () => OrganizationMembership,
+    (membership) => membership.organization,
+  )
   memberships!: OrganizationMembership[];
 
   @OneToMany(() => OrganizationDepartment, (dept) => dept.organization)
   departments!: OrganizationDepartment[];
 
-  @OneToMany(() => Game, (game) => game.organization,)
+  @OneToMany(() => Game, (game) => game.organization)
   games!: Game[];
   // todo: в связанной таблице сделать onDelete: 'SET NULL'
-  @OneToMany(() => Tournament, (tournament) => tournament.organization,)
+  @OneToMany(() => Tournament, (tournament) => tournament.organization)
   tournaments!: Tournament[];
   // todo: в связанной таблице сделать onDelete: 'SET NULL'
-  @OneToMany(() => Question, (question) => question.organization,)
+  @OneToMany(() => Question, (question) => question.organization)
   customQuestions!: Question[];
 
   @CreateDateColumn()

@@ -16,8 +16,8 @@ describe('GameService', () => {
     delete: jest.fn(),
   };
 
-  const gamePolicyServiceMock = {}
-  const gameValidationServiceMock = {}
+  const gamePolicyServiceMock = {};
+  const gameValidationServiceMock = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

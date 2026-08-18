@@ -1,10 +1,5 @@
-import {
-  IsOptional,
-  IsString, IsUUID,
-  Length,
-} from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-
 
 export class JoinGameDto {
   @ApiProperty({

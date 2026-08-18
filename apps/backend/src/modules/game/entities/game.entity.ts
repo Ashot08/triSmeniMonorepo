@@ -106,7 +106,10 @@ export class Game {
   // @Column({ type: 'uuid', nullable: true })
   // questionCategoryId?: string;
 
-  @Column({ type: 'integer', default: defaultGameOptions.ANSWER_TIMEOUT_SECONDS })
+  @Column({
+    type: 'integer',
+    default: defaultGameOptions.ANSWER_TIMEOUT_SECONDS,
+  })
   answerTimeoutSeconds!: number;
 
   @Column({ type: 'boolean', default: true })

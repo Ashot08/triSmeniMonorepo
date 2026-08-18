@@ -3,8 +3,6 @@ import { RedisService } from '@/redis/redis.service';
 import * as bcrypt from 'bcrypt';
 import { Session } from '@/modules/auth/interfaces/session.interface';
 
-
-
 @Injectable()
 export class SessionService {
   constructor(private readonly redis: RedisService) {}
@@ -27,8 +25,7 @@ export class SessionService {
     sessionId: string,
     refreshToken: string,
   ): Promise<void> {
-    const session =
-      await this.getSession(sessionId);
+    const session = await this.getSession(sessionId);
 
     if (!session) {
       return;
@@ -36,16 +33,10 @@ export class SessionService {
 
     const refreshHash = await bcrypt.hash(refreshToken, 10);
 
-    await this.redis.updateSessionRefreshHash(
-      sessionId,
-      refreshHash,
-    );
+    await this.redis.updateSessionRefreshHash(sessionId, refreshHash);
   }
 
-  async deleteSession(
-    userId: string,
-    sessionId: string,
-  ): Promise<void> {
+  async deleteSession(userId: string, sessionId: string): Promise<void> {
     const session = await this.getSession(sessionId);
 
     if (!session) {
@@ -56,34 +47,21 @@ export class SessionService {
       return;
     }
 
-    await this.redis.deleteSession(
-      userId,
-      sessionId,
-    );
+    await this.redis.deleteSession(userId, sessionId);
   }
 
-  async getUserSessions(
-    userId: string,
-  ): Promise<string[]> {
-    return this.redis.getUserSessions(
-      userId,
-    );
+  async getUserSessions(userId: string): Promise<string[]> {
+    return this.redis.getUserSessions(userId);
   }
 
-  async deleteAllUserSessions(
-    userId: string,
-  ): Promise<void> {
-
+  async deleteAllUserSessions(userId: string): Promise<void> {
     const sessions = await this.redis.getUserSessions(userId);
 
     if (!sessions.length) {
       return;
     }
 
-    await this.redis.deleteSessions(
-      userId,
-      sessions,
-    );
+    await this.redis.deleteSessions(userId, sessions);
   }
 
   async validateRefreshToken(
@@ -91,9 +69,7 @@ export class SessionService {
     sessionId: string,
     refreshToken: string,
   ): Promise<boolean> {
-
-    const session =
-      await this.getSession(sessionId);
+    const session = await this.getSession(sessionId);
 
     if (!session) {
       return false;
@@ -103,9 +79,6 @@ export class SessionService {
       return false;
     }
 
-    return bcrypt.compare(
-      refreshToken,
-      session.refreshHash,
-    );
+    return bcrypt.compare(refreshToken, session.refreshHash);
   }
 }

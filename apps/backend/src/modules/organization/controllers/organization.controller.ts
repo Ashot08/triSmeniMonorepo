@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { OrganizationService } from '../organization.service';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
 import { UpdateOrganizationDto } from '../dto/update-organization.dto';
@@ -29,8 +38,14 @@ export class OrganizationController {
   }
 
   @Patch(':organizationId')
-  update(@Param('organizationId', ParseUUIDPipe) organizationId: string, @Body() updateOrganizationDto: UpdateOrganizationDto) {
-    return this.organizationService.update(organizationId, updateOrganizationDto);
+  update(
+    @Param('organizationId', ParseUUIDPipe) organizationId: string,
+    @Body() updateOrganizationDto: UpdateOrganizationDto,
+  ) {
+    return this.organizationService.update(
+      organizationId,
+      updateOrganizationDto,
+    );
   }
 
   @Delete(':id')

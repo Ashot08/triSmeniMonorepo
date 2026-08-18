@@ -48,32 +48,28 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  register (@Body() createUserDto: CreateUserDto) {
+  register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
   }
 
   @Public()
   @Post('refresh')
-  refresh(
-    @Body() body: { refreshToken: string },
-  ) {
+  refresh(@Body() body: { refreshToken: string }) {
     // todo: записывать рефреш токен в http only cookies
 
-    return this.authService.refresh(
-      body.refreshToken,
-    );
+    return this.authService.refresh(body.refreshToken);
   }
 
   @Post('logout')
   logout(@Req() req: JwtRequest) {
-    const {id, sessionId} = req.user;
-    return this.authService.logout(id, sessionId)
+    const { id, sessionId } = req.user;
+    return this.authService.logout(id, sessionId);
   }
 
   @Post('logout-all')
   logoutAll(@Req() req: JwtRequest) {
-    const {id} = req.user;
-    return this.authService.logoutAll(id)
+    const { id } = req.user;
+    return this.authService.logoutAll(id);
   }
 
   @RequireGlobalRoles(RoleCode.PLAYER, RoleCode.PLATFORM_ADMIN)
@@ -84,14 +80,8 @@ export class AuthController {
 
   @Public()
   @Post('password-reset/request')
-  requestPasswordReset(
-    @Body() dto: RequestPasswordResetDto,
-  ) {
-
-    return this.passwordResetService.requestPasswordReset(
-      dto.email,
-    );
-
+  requestPasswordReset(@Body() dto: RequestPasswordResetDto) {
+    return this.passwordResetService.requestPasswordReset(dto.email);
   }
 
   @Public()
@@ -102,14 +92,7 @@ export class AuthController {
     },
   })
   @Post('password-reset/confirm')
-  resetPassword(
-    @Body() dto: ResetPasswordDto,
-  ) {
-
-    return this.passwordResetService.resetPassword(
-      dto.token,
-      dto.password,
-    );
-
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.passwordResetService.resetPassword(dto.token, dto.password);
   }
 }

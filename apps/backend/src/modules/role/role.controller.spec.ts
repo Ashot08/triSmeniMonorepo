@@ -5,7 +5,7 @@ import { RoleService } from './role.service';
 describe('RoleController', () => {
   let controller: RoleController;
 
-  const RoleServiceMock = {}
+  const RoleServiceMock = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

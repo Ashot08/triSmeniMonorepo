@@ -1,6 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { RedisService } from './redis.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @ApiTags('Redis connection tests')

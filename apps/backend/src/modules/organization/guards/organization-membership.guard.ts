@@ -1,5 +1,20 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { OrganizationMembershipService } from '@/modules/organization/organization-membership.service';
+import { Request } from 'express';
+
+interface OrganizationMembershipRequest extends Request {
+  params: {
+    organizationId: string;
+  };
+  body: {
+    userId: string;
+  };
+}
 
 @Injectable()
 export class OrganizationMembershipGuard implements CanActivate {
@@ -8,7 +23,9 @@ export class OrganizationMembershipGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const req = context.switchToHttp().getRequest();
+    const req = context
+      .switchToHttp()
+      .getRequest<OrganizationMembershipRequest>();
 
     const organizationId = req.params.organizationId;
     const userId = req.body.userId;

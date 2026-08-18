@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '@/config/env.enum';
 import { UserService } from '@/modules/user/user.service';
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<JwtUser> {
+  validate(payload: JwtPayload): JwtUser {
     // todo: Сейчас доверяем JWT токену, в перспективе доработать на более надежный вариант.
     // const user = await this.userService.findOne(payload.login);
     //
@@ -32,6 +32,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       id: payload.sub,
       sessionId: payload.sid,
       roles: payload.roles,
-    }
+    };
   }
 }

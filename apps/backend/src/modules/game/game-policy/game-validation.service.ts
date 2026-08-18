@@ -1,16 +1,11 @@
-import {
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GameCreationPolicy } from './interfaces/game-creation-policy.interface';
 import { PendingGameSettings } from '@/modules/game/pending-game/pending-game';
 import { GameJoinTypePolicy } from '@/modules/game/game-policy/interfaces/join-game-policy.interface';
-import { GameJoinType } from '@/modules/game/enums/game-join-type.enum';
 import { AddUserToGamePolicy } from '@/modules/game/game-policy/interfaces/add-user-to-game-policy.interface';
 
 @Injectable()
 export class GameValidationService {
-
   validateCreate(
     settings: PendingGameSettings,
     policy: GameCreationPolicy,
@@ -51,9 +46,7 @@ export class GameValidationService {
     policy: GameCreationPolicy,
   ) {
     if (!policy.allowedGamePvTypes.includes(settings.gamePvType)) {
-      throw new ForbiddenException(
-        'Selected pv type mode is unavailable.',
-      );
+      throw new ForbiddenException('Selected pv type mode is unavailable.');
     }
   }
 
@@ -62,9 +55,7 @@ export class GameValidationService {
     policy: GameJoinTypePolicy | GameCreationPolicy,
   ) {
     if (!policy.allowedJoinTypes.includes(settings.joinType)) {
-      throw new ForbiddenException(
-        'Selected join type mode is unavailable.',
-      );
+      throw new ForbiddenException('Selected join type mode is unavailable.');
     }
   }
 
@@ -72,14 +63,11 @@ export class GameValidationService {
     settings: PendingGameSettings,
     policy: GameCreationPolicy,
   ) {
-    if (settings.visibility && (
-      !policy.allowedVisibilities.includes(
-        settings.visibility,
-      )
-    )) {
-      throw new ForbiddenException(
-        'Selected visibility is unavailable.',
-      );
+    if (
+      settings.visibility &&
+      !policy.allowedVisibilities.includes(settings.visibility)
+    ) {
+      throw new ForbiddenException('Selected visibility is unavailable.');
     }
   }
 }

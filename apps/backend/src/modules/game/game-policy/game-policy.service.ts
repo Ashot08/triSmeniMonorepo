@@ -1,7 +1,9 @@
 import {
-  ORGANIZATION_ADMIN_POLICY, ORGANIZATION_PLAYER_POLICY,
-  PLATFORM_ADMIN_POLICY, PLAYER_POLICY,
-  SUBSCRIPTION_OWNER_POLICY
+  ORGANIZATION_ADMIN_POLICY,
+  ORGANIZATION_PLAYER_POLICY,
+  PLATFORM_ADMIN_POLICY,
+  PLAYER_POLICY,
+  SUBSCRIPTION_OWNER_POLICY,
 } from './constants/default-game-creation.policies';
 import { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
 import { GameCreationPolicy } from '@/modules/game/game-policy/interfaces/game-creation-policy.interface';
@@ -28,17 +30,15 @@ export class GamePolicyService {
       return PLATFORM_ADMIN_POLICY;
     }
 
-    if (context.organizationRoles?.includes(
+    if (
+      context.organizationRoles?.includes(
         OrganizationRoleCode.ORGANIZATION_ADMIN,
       )
     ) {
       return ORGANIZATION_ADMIN_POLICY;
     }
 
-    if (context.organizationRoles?.includes(
-        OrganizationRoleCode.PLAYER,
-      )
-    ) {
+    if (context.organizationRoles?.includes(OrganizationRoleCode.PLAYER)) {
       return ORGANIZATION_PLAYER_POLICY;
     }
 
@@ -49,23 +49,23 @@ export class GamePolicyService {
     return PLAYER_POLICY;
   }
 
-  getJoinGamePolicy () {
+  getJoinGamePolicy() {
     return PLAYER_POLICY;
   }
 
-  getAddUserToGamePolicy (context: AddUserToGameContext) {
+  getAddUserToGamePolicy(context: AddUserToGameContext) {
     if (context.user.roles.includes(RoleCode.PLATFORM_ADMIN)) {
       return PLATFORM_ADMIN_POLICY;
     }
 
-    if (context.organizationRoles?.includes(
-      OrganizationRoleCode.ORGANIZATION_ADMIN,
-    )
+    if (
+      context.organizationRoles?.includes(
+        OrganizationRoleCode.ORGANIZATION_ADMIN,
+      )
     ) {
       return ORGANIZATION_ADMIN_POLICY;
     }
 
     return SUBSCRIPTION_OWNER_POLICY;
   }
-
 }

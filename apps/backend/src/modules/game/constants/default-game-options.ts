@@ -7,4 +7,4 @@ export const defaultGameOptions = {
   ANSWER_TIMEOUT_SECONDS: 25,
   IS_RECORDED_TO_STATISTICS: true,
   QUESTIONS_TYPE: GameQuestionsType.PLATFORM,
-}
+};

@@ -12,13 +12,13 @@ describe('RoleService', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
-  }
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RoleService,
-        {provide: getRepositoryToken(Role), useValue: RoleRepositoryMock},
+        { provide: getRepositoryToken(Role), useValue: RoleRepositoryMock },
       ],
     }).compile();
 

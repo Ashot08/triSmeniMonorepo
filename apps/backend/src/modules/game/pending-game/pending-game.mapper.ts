@@ -1,4 +1,8 @@
-import { PendingGame, PendingGamePlayer, PendingGameSettings, PendingGameStatus } from './pending-game';
+import {
+  PendingGame,
+  PendingGameSettings,
+  PendingGameStatus,
+} from './pending-game';
 
 export interface PendingGamePlayerRedisDto {
   id: string;
@@ -27,7 +31,7 @@ export class PendingGameMapper {
       version,
       status: game.getStatus(),
       settings: game.getSettings(),
-      players: game.getPlayers().map(player => ({
+      players: game.getPlayers().map((player) => ({
         ...player,
         joinedAt: player.joinedAt.toISOString(),
       })),
@@ -44,7 +48,7 @@ export class PendingGameMapper {
       dto.organizationId,
       dto.status,
       dto.settings,
-      dto.players.map(player => ({
+      dto.players.map((player) => ({
         ...player,
         joinedAt: new Date(player.joinedAt),
       })),

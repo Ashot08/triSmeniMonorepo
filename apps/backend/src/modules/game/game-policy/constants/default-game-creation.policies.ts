@@ -12,18 +12,11 @@ export const PLAYER_POLICY: GameCreationPolicy = {
   canCreateTournament: false,
   canInviteGuests: true,
 
-  allowedGamePvTypes: [
-    GamePvType.PVP,
-    GamePvType.PVB,
-  ],
+  allowedGamePvTypes: [GamePvType.PVP, GamePvType.PVB],
 
-  allowedJoinTypes: [
-    GameJoinType.JOINABLE,
-  ],
+  allowedJoinTypes: [GameJoinType.JOINABLE],
 
-  allowedVisibilities: [
-    GameVisibility.VISIBLE,
-  ],
+  allowedVisibilities: [GameVisibility.VISIBLE],
 };
 
 export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
@@ -35,21 +28,11 @@ export const SUBSCRIPTION_OWNER_POLICY: GameCreationPolicy = {
   canCreateTournament: false,
   canInviteGuests: true,
 
-  allowedGamePvTypes: [
-    GamePvType.PVP,
-    GamePvType.PVB,
-    GamePvType.PVP_BOTS,
-  ],
+  allowedGamePvTypes: [GamePvType.PVP, GamePvType.PVB, GamePvType.PVP_BOTS],
 
-  allowedJoinTypes: [
-    GameJoinType.JOINABLE,
-    GameJoinType.JOIN_WITH_CODE,
-  ],
+  allowedJoinTypes: [GameJoinType.JOINABLE, GameJoinType.JOIN_WITH_CODE],
 
-  allowedVisibilities: [
-    GameVisibility.VISIBLE,
-    GameVisibility.HIDDEN,
-  ],
+  allowedVisibilities: [GameVisibility.VISIBLE, GameVisibility.HIDDEN],
 };
 
 export const ORGANIZATION_ADMIN_POLICY: GameCreationPolicy = {
@@ -63,10 +46,7 @@ export const ORGANIZATION_ADMIN_POLICY: GameCreationPolicy = {
 
   allowedGamePvTypes: Object.values(GamePvType),
 
-  allowedVisibilities: [
-    GameVisibility.VISIBLE,
-    GameVisibility.HIDDEN,
-  ],
+  allowedVisibilities: [GameVisibility.VISIBLE, GameVisibility.HIDDEN],
 
   allowedJoinTypes: [
     GameJoinType.JOINABLE,
@@ -84,18 +64,11 @@ export const ORGANIZATION_PLAYER_POLICY: GameCreationPolicy = {
   canCreateTournament: false,
   canInviteGuests: true,
 
-  allowedGamePvTypes: [
-    GamePvType.PVP,
-    GamePvType.PVB,
-  ],
+  allowedGamePvTypes: [GamePvType.PVP, GamePvType.PVB],
 
-  allowedJoinTypes: [
-    GameJoinType.JOINABLE,
-  ],
+  allowedJoinTypes: [GameJoinType.JOINABLE],
 
-  allowedVisibilities: [
-    GameVisibility.VISIBLE,
-  ],
+  allowedVisibilities: [GameVisibility.VISIBLE],
 };
 
 export const PLATFORM_ADMIN_POLICY: GameCreationPolicy = {

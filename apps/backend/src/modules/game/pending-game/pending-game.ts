@@ -20,7 +20,6 @@ export interface PendingGamePlayer {
   joinedAt: Date;
 }
 
-
 export interface CreatePendingGameParams {
   ownerId: string;
   organizationId: string | undefined;
@@ -96,7 +95,7 @@ export class PendingGame {
       throw new GameNotAcceptingPlayersError();
     }
 
-    if (this.players.some(player => player.id === playerId)) {
+    if (this.players.some((player) => player.id === playerId)) {
       throw new PlayerAlreadyJoinedError();
     }
 
@@ -111,9 +110,7 @@ export class PendingGame {
   }
 
   leave(playerId: string): void {
-    const index = this.players.findIndex(
-      player => player.id === playerId,
-    );
+    const index = this.players.findIndex((player) => player.id === playerId);
 
     if (index === -1) {
       throw new Error('Player not found');
@@ -123,9 +120,7 @@ export class PendingGame {
   }
 
   canStart(): boolean {
-    return (
-      this.players.length === this.settings.playersCount
-    );
+    return this.players.length === this.settings.playersCount;
   }
 
   getVersion(): number {

@@ -47,7 +47,6 @@ export class Tournament {
 
   // ✅ Формат турнира
 
-
   // ✅ Параметры участия
   @Column({ type: 'integer', default: 2 })
   minParticipants!: number;

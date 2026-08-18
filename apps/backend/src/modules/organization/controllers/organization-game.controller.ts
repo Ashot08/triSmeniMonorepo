@@ -1,6 +1,13 @@
 import { RequireOrganizationRoles } from '../decorators/require-organization-roles.decorator';
 import { OrganizationRoleCode } from '@/common/enums/organization.role.enum';
-import { Body, ConflictException, Controller, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateGameDto } from '@/modules/game/dto/create-game.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { JwtUser } from '@/modules/auth/interfaces/jwt.user.interface';
@@ -16,8 +23,7 @@ export class OrganizationGameController {
   constructor(
     private readonly createPendingGameUseCase: CreatePendingGameUseCase,
     private readonly joinGameUseCase: JoinGameUseCase,
-  ) {
-  }
+  ) {}
 
   @RequireOrganizationRoles(
     OrganizationRoleCode.ORGANIZATION_ADMIN,
@@ -55,10 +61,8 @@ export class OrganizationGameController {
 
     @Body() dto: JoinGameDto,
 
-    @CurrentUser() user: JwtUser
+    @CurrentUser() user: JwtUser,
   ) {
-      return this.joinGameUseCase.execute({id: gameId, dto, user});
+    return this.joinGameUseCase.execute({ id: gameId, dto, user });
   }
-
-
 }
