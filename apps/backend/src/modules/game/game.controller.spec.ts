@@ -81,8 +81,8 @@ describe('GameController', () => {
     expect(await controller.create(dto, req.user)).toEqual(game);
 
     expect(gameService.create).toHaveBeenCalledWith({
+      createdById: req.user.id,
       dto,
-      user: req.user,
     });
   });
 });
