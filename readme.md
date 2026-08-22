@@ -1,3 +1,5 @@
+# Многопользовательская игровая платформа для тестирования знаний
+
 # Backend
 
 NestJS API: PostgreSQL, Redis, MinIO (S3), JWT, WebSocket, BullMQ и Swagger.
